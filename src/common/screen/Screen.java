@@ -11,8 +11,7 @@ public abstract class Screen extends JPanel {
 
     protected void navigateTo(String screenName) {
         if (screenController != null) {
-            java.awt.CardLayout cardLayout = (java.awt.CardLayout) screenController.getLayout();
-            cardLayout.show(screenController, screenName);
+            screenController.showScreen(screenName);
         }
     }
 }
