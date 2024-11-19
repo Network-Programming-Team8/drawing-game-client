@@ -4,15 +4,18 @@ import modules.auth.AuthScreen;
 import modules.lobby.LobbyScreen;
 
 import javax.swing.*;
+import java.io.IOException;
 
 public class ScreenFrame extends JFrame {
-    static ScreenController screenController;
+    private static ScreenViewer screenViewer;
+    private static ScreenController screenController;
 
-    public ScreenFrame() {
+    public ScreenFrame() throws IOException {
         super("Application");
         initializeFrame();
         configureScreens();
         createMenuBar();
+
     }
 
     private void initializeFrame() {
@@ -21,14 +24,15 @@ public class ScreenFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    private void configureScreens() {
+    private void configureScreens() throws IOException {
         screenController = new ScreenController();
-        Screen.setScreenController(screenController);
+        screenViewer = new ScreenViewer();
+        Screen.setScreenController(screenViewer);
 
-        screenController.addScreen(new AuthScreen(), AuthScreen.screenName);
-        screenController.addScreen(new LobbyScreen(), LobbyScreen.screenName);
+        screenViewer.addScreen(new AuthScreen(), AuthScreen.screenName);
+        screenViewer.addScreen(new LobbyScreen(), LobbyScreen.screenName);
 
-        add(screenController);
+        add(screenViewer);
     }
 
     private void createMenuBar() {
@@ -37,10 +41,10 @@ public class ScreenFrame extends JFrame {
         JMenu navigationMenu = new JMenu("네비게이션 (추후 컨트롤러에서 navigate 해줄 파트)");
 
         JMenuItem authMenuItem = new JMenuItem("Auth Screen");
-        authMenuItem.addActionListener(e -> screenController.showScreen(AuthScreen.screenName));
+        authMenuItem.addActionListener(e -> screenViewer.showScreen(AuthScreen.screenName));
 
         JMenuItem lobbyMenuItem = new JMenuItem("Lobby Screen");
-        lobbyMenuItem.addActionListener(e -> screenController.showScreen(LobbyScreen.screenName));
+        lobbyMenuItem.addActionListener(e -> screenViewer.showScreen(LobbyScreen.screenName));
 
         navigationMenu.add(authMenuItem);
         navigationMenu.add(lobbyMenuItem);

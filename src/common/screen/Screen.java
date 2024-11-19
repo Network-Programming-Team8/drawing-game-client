@@ -3,9 +3,9 @@ package common.screen;
 import javax.swing.JPanel;
 
 public abstract class Screen extends JPanel {
-    protected static ScreenController screenController;
+    protected static ScreenViewer screenController;
 
-    public static void setScreenController(ScreenController controller) {
+    public static void setScreenController(ScreenViewer controller) {
         Screen.screenController = controller;
     }
 
