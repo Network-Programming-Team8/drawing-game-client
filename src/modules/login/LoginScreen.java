@@ -2,6 +2,7 @@ package modules.login;
 
 import common.screen.Screen;
 import dto.event.client.ClientLoginEvent;
+import dto.event.server.ServerLoginEvent;
 import message.Message;
 
 import javax.swing.*;
@@ -83,7 +84,12 @@ public class LoginScreen extends Screen {
 
             try {
                 screenController.sendToServer(new Message(CLIENT_LOGIN_EVENT, new ClientLoginEvent(nickname)));
+                Message message = screenController.receiveFromServer();
+                ServerLoginEvent serverLoginEvent = (ServerLoginEvent)message.getMsgDTO();
+                System.out.println(serverLoginEvent.getId());
             } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            } catch (ClassNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
         });

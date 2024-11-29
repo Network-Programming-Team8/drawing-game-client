@@ -1,5 +1,6 @@
 package common.screen;
 
+import dto.event.Event;
 import message.Message;
 import utils.ClientSocket;
 
@@ -21,8 +22,8 @@ public class ScreenController extends JPanel {
 
     public ScreenController() throws IOException {
         clientSocket = new ClientSocket();
-        in = clientSocket.getObjectInputStream();
         out = clientSocket.getObjectOutputStream();
+        in = clientSocket.getObjectInputStream();
         cardLayout = new CardLayout();
         setLayout(cardLayout);
     }
@@ -43,5 +44,9 @@ public class ScreenController extends JPanel {
 
     public void sendToServer(Message message) throws IOException {
         out.writeObject(message);
+    }
+
+    public Message receiveFromServer() throws IOException, ClassNotFoundException {
+        return (Message) in.readObject();
     }
 }

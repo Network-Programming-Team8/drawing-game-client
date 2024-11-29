@@ -3,6 +3,8 @@ package dto.event.server;
 import dto.event.Event;
 
 public class ServerCreateRoomEvent extends Event {
+
+    private static final long serialVersionUID = 5L;
     int id;
     int drawTimeLimit;
     int participantLimit;
