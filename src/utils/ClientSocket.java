@@ -5,7 +5,7 @@ import java.net.Socket;
 
 public class ClientSocket {
     private static final String ipAddress = "localhost";
-    private static final int port = 8080;
+    private static final int port = 10001;
 
     private final Socket sock;
     private final InputStream in;

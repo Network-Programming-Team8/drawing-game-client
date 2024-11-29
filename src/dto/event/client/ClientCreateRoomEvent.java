@@ -1,20 +1,20 @@
-package dto;
+package dto.event.client;
 
-public class ServerCreateRoomEventDTO extends DTO{
-    int id;
+import dto.event.Event;
+
+public class ClientCreateRoomEvent extends Event {
     int drawTimeLimit;
     int participantLimit;
 
-    public ServerCreateRoomEventDTO(int id, int drawTimeLimit, int participantLimit){
-        this.id = id;
+    public ClientCreateRoomEvent(int drawTimeLimit, int participantLimit){
         this.drawTimeLimit = drawTimeLimit;
         this.participantLimit = participantLimit;
     }
 
-    public int getId() { return id; }
     public int getDrawTimeLimit(){
         return drawTimeLimit;
     }
+
     public int getParticipantLimit() {
         return participantLimit;
     }

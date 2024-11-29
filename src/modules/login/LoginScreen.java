@@ -1,8 +1,14 @@
 package modules.login;
 
 import common.screen.Screen;
+import dto.event.client.ClientLoginEvent;
+import message.Message;
+
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+
+import static message.MessageType.CLIENT_LOGIN_EVENT;
 
 public class LoginScreen extends Screen {
     public static final String screenName = "NICKNAME_INPUT_SCREEN";
@@ -73,6 +79,12 @@ public class LoginScreen extends Screen {
                 JOptionPane.showMessageDialog(this, "Please enter a nickname.", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, "Nickname submitted: " + nickname, "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+            try {
+                screenController.sendToServer(new Message(CLIENT_LOGIN_EVENT, new ClientLoginEvent(nickname)));
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
         });
         mainPanel.add(submitButton);

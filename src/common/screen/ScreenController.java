@@ -1,5 +1,6 @@
 package common.screen;
 
+import message.Message;
 import utils.ClientSocket;
 
 import javax.swing.*;
@@ -12,16 +13,16 @@ public class ScreenController extends JPanel {
     private static final long serialVersionUID = 1L;
     private CardLayout cardLayout;
 
-//    private ClientSocket clientSocket;
-//    private final ObjectInputStream in;
-//    private final ObjectOutputStream out;
+    private ClientSocket clientSocket;
+    private final ObjectInputStream in;
+    private final ObjectOutputStream out;
 
 //    private final Map<String, DTOClass> dtoMapper;
 
     public ScreenController() throws IOException {
-//        clientSocket = new ClientSocket();
-//        in = clientSocket.getObjectInputStream();
-//        out = clientSocket.getObjectOutputStream();
+        clientSocket = new ClientSocket();
+        in = clientSocket.getObjectInputStream();
+        out = clientSocket.getObjectOutputStream();
         cardLayout = new CardLayout();
         setLayout(cardLayout);
     }
@@ -38,5 +39,9 @@ public class ScreenController extends JPanel {
     }
     public void showScreen(String screenName) {
         cardLayout.show(this, screenName);
+    }
+
+    public void sendToServer(Message message) throws IOException {
+        out.writeObject(message);
     }
 }
