@@ -3,6 +3,7 @@ package common.screen;
 import modules.auth.AuthScreen;
 import modules.lobby.LobbyScreen;
 import modules.login.LoginScreen;
+import modules.roomList.RoomListScreen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,6 +34,7 @@ public class ScreenFrame extends JFrame {
         screenController.addScreen(new LoginScreen(), LoginScreen.screenName);
         screenController.addScreen(new AuthScreen(), AuthScreen.screenName);
         screenController.addScreen(new LobbyScreen(), LobbyScreen.screenName);
+        screenController.addScreen(new RoomListScreen(), RoomListScreen.screenName);
 
         add(screenController);
     }

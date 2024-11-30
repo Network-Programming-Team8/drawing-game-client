@@ -4,6 +4,7 @@ import common.screen.Screen;
 import dto.event.client.ClientLoginEvent;
 import dto.event.server.ServerLoginEvent;
 import message.Message;
+import modules.roomList.RoomListScreen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.io.IOException;
 import static message.MessageType.CLIENT_LOGIN_EVENT;
 
 public class LoginScreen extends Screen {
-    public static final String screenName = "NICKNAME_INPUT_SCREEN";
+    public static final String screenName = "LOGIN_SCREEN";
 
     public LoginScreen() {
         // GridBagLayout을 사용하여 중앙 정렬을 위한 레이아웃 설정
@@ -86,7 +87,8 @@ public class LoginScreen extends Screen {
                 screenController.sendToServer(new Message(CLIENT_LOGIN_EVENT, new ClientLoginEvent(nickname)));
                 Message message = screenController.receiveFromServer();
                 ServerLoginEvent serverLoginEvent = (ServerLoginEvent)message.getMsgDTO();
-                System.out.println(serverLoginEvent.getId());
+//                System.out.println(serverLoginEvent.getId());
+                screenController.showScreen(RoomListScreen.screenName);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             } catch (ClassNotFoundException ex) {
