@@ -1,9 +1,18 @@
 package modules.roomList;
 
 import common.screen.Screen;
+import dto.event.client.ClientCreateRoomEvent;
+import dto.event.client.ClientJoinRoomEvent;
+import dto.event.server.ServerCreateRoomEvent;
+import dto.event.server.ServerRoomUpdateEvent;
+import message.Message;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+
+import static message.MessageType.CLIENT_CREATE_ROOM_EVENT;
+import static message.MessageType.CLIENT_JOIN_ROOM_EVENT;
 
 public class RoomListScreen  extends Screen {
     public static final String screenName = "ROOM_LIST_SCREEN";
@@ -45,6 +54,19 @@ public class RoomListScreen  extends Screen {
         // 방 생성 버튼
         JButton createButton = new JButton("방 생성");
         createButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        createButton.addActionListener(e -> {
+            ClientCreateRoomEvent clientCreateRoomEvent = getCreateRoomDTOFromTextField(createPanel, timeLimitField, participantLimitField);
+            try {
+                screenController.sendToServer(new Message(CLIENT_CREATE_ROOM_EVENT, clientCreateRoomEvent));
+                Message message = screenController.receiveFromServer();
+                ServerCreateRoomEvent serverCreateRoomEvent = (ServerCreateRoomEvent) message.getMsgDTO();
+                //TODO : 서버에서 받은 room 정보 저장해두기
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
         createPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         createPanel.add(createButton);
 
@@ -70,6 +92,19 @@ public class RoomListScreen  extends Screen {
         // Join 버튼
         JButton joinButton = new JButton("Join");
         joinButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        joinButton.addActionListener(e->{
+            ClientJoinRoomEvent clientJoinRoomEvent = getJoinRoomDTOFromTextField(createPanel, roomIdField);
+            try {
+                screenController.sendToServer(new Message(CLIENT_JOIN_ROOM_EVENT, clientJoinRoomEvent));
+                Message message = screenController.receiveFromServer();
+                ServerRoomUpdateEvent serverRoomUpdateEvent = (ServerRoomUpdateEvent) message.getMsgDTO();
+                //TODO : 서버에서 받은 room 정보 저장해두기
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
         joinPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         joinPanel.add(joinButton);
 
@@ -79,5 +114,46 @@ public class RoomListScreen  extends Screen {
 
         // 화면 표시
         setVisible(true);
+    }
+
+    private ClientJoinRoomEvent getJoinRoomDTOFromTextField(JPanel createPanel, JTextField roomIdField) {
+        String roomId = roomIdField.getText();
+
+        if (roomId.isEmpty() || roomId.isEmpty()) {
+            JOptionPane.showMessageDialog(createPanel, "모든 필드를 채워주세요.", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+
+        int roomIdInt;
+        try {
+            roomIdInt = Integer.parseInt(roomId);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(createPanel, "시간 제한과 참여자 수는 숫자로 입력해야 합니다.", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+
+        return new ClientJoinRoomEvent(roomIdInt);
+    }
+
+    private ClientCreateRoomEvent getCreateRoomDTOFromTextField(JPanel createPanel, JTextField timeLimitField, JTextField participantLimitField) {
+        String timeLimitText = timeLimitField.getText();
+        String participantLimitText = participantLimitField.getText();
+
+        if (timeLimitText.isEmpty() || participantLimitText.isEmpty()) {
+            JOptionPane.showMessageDialog(createPanel, "모든 필드를 채워주세요.", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+
+        int timeLimit;
+        int participantLimit;
+        try {
+            timeLimit = Integer.parseInt(timeLimitText);
+            participantLimit = Integer.parseInt(participantLimitText);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(createPanel, "시간 제한과 참여자 수는 숫자로 입력해야 합니다.", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+
+        return new ClientCreateRoomEvent(timeLimit, participantLimit);
     }
 }

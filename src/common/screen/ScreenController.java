@@ -1,6 +1,5 @@
 package common.screen;
 
-import dto.event.Event;
 import message.Message;
 import utils.ClientSocket;
 
