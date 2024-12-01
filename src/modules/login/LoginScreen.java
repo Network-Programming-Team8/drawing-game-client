@@ -1,8 +1,10 @@
 package modules.login;
 
 import common.screen.Screen;
+import domain.User;
 import dto.event.client.ClientLoginEvent;
 import dto.event.server.ServerLoginEvent;
+import dto.info.UserInfo;
 import message.Message;
 import modules.roomList.RoomListScreen;
 
@@ -86,7 +88,7 @@ public class LoginScreen extends Screen {
                     screenController.sendToServer(new Message(CLIENT_LOGIN_EVENT, new ClientLoginEvent(nickname)));
                     Message message = screenController.receiveFromServer();
                     ServerLoginEvent serverLoginEvent = (ServerLoginEvent) message.getMsgDTO();
-//                System.out.println(serverLoginEvent.getId());
+                    screenController.setUserInfo(new UserInfo(serverLoginEvent.getId(), serverLoginEvent.getNickname(), true));
                     screenController.showScreen(RoomListScreen.screenName);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);

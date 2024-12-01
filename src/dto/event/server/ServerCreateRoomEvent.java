@@ -17,4 +17,16 @@ public class ServerCreateRoomEvent extends Event {
         this.drawTimeLimit = drawTimeLimit;
         this.participantLimit = participantLimit;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getDrawTimeLimit() {
+        return drawTimeLimit;
+    }
+
+    public int getParticipantLimit() {
+        return participantLimit;
+    }
 }

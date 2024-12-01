@@ -1,12 +1,14 @@
 package modules.lobby;
 
 import common.screen.Screen;
+import dto.info.RoomInfo;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class LobbyScreen extends Screen {
     public static final String screenName = "LOBBY_SCREEN";
+    private static RoomInfo roomInfo;
 
     public LobbyScreen() {
         setSize(800, 600);
@@ -86,5 +88,9 @@ public class LobbyScreen extends Screen {
         add(rightPanel);
 
         setVisible(true);
+    }
+
+    public static void setRoomInfo(RoomInfo room) {
+        roomInfo = room;
     }
 }

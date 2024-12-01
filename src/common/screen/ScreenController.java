@@ -1,5 +1,6 @@
 package common.screen;
 
+import dto.info.UserInfo;
 import message.Message;
 import utils.ClientSocket;
 
@@ -17,6 +18,8 @@ public class ScreenController extends JPanel {
     private final ObjectInputStream in;
     private final ObjectOutputStream out;
 
+    private UserInfo userInfo;
+
 //    private final Map<String, DTOClass> dtoMapper;
 
     public ScreenController() throws IOException {
@@ -25,13 +28,6 @@ public class ScreenController extends JPanel {
         in = clientSocket.getObjectInputStream();
         cardLayout = new CardLayout();
         setLayout(cardLayout);
-    }
-
-    public void run() throws IOException, ClassNotFoundException {
-        while(true){
-            //TODO : outputStream 에서 계속 읽어서 DTO 값에 따라 ScreenViewer 에 데이터 넘겨주면서 어떤 화면 보여줄지 결정
-//            in.readObject();
-        }
     }
 
     public void addScreen(Screen screen, String screenName) {
@@ -47,5 +43,13 @@ public class ScreenController extends JPanel {
 
     public Message receiveFromServer() throws IOException, ClassNotFoundException {
         return (Message) in.readObject();
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    public UserInfo getUserInfo() {
+        return userInfo;
     }
 }

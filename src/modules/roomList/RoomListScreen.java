@@ -1,16 +1,21 @@
 package modules.roomList;
 
 import common.screen.Screen;
+import domain.User;
 import dto.event.client.ClientCreateRoomEvent;
 import dto.event.client.ClientJoinRoomEvent;
 import dto.event.server.ServerCreateRoomEvent;
 import dto.event.server.ServerRoomUpdateEvent;
+import dto.info.RoomInfo;
+import dto.info.UserInfo;
 import message.Message;
 import modules.lobby.LobbyScreen;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static message.MessageType.CLIENT_CREATE_ROOM_EVENT;
 import static message.MessageType.CLIENT_JOIN_ROOM_EVENT;
@@ -61,7 +66,15 @@ public class RoomListScreen  extends Screen {
                 screenController.sendToServer(new Message(CLIENT_CREATE_ROOM_EVENT, clientCreateRoomEvent));
                 Message message = screenController.receiveFromServer();
                 ServerCreateRoomEvent serverCreateRoomEvent = (ServerCreateRoomEvent) message.getMsgDTO();
-                //TODO : 서버에서 받은 room 정보 저장해두기
+
+                RoomInfo roomInfo = new RoomInfo(
+                        serverCreateRoomEvent.getId(),
+                        serverCreateRoomEvent.getDrawTimeLimit(),
+                        serverCreateRoomEvent.getParticipantLimit(),
+                        Arrays.asList(screenController.getUserInfo())
+                );
+                LobbyScreen.setRoomInfo(roomInfo);
+
                 screenController.showScreen(LobbyScreen.screenName);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -100,7 +113,9 @@ public class RoomListScreen  extends Screen {
                 screenController.sendToServer(new Message(CLIENT_JOIN_ROOM_EVENT, clientJoinRoomEvent));
                 Message message = screenController.receiveFromServer();
                 ServerRoomUpdateEvent serverRoomUpdateEvent = (ServerRoomUpdateEvent) message.getMsgDTO();
-                //TODO : 서버에서 받은 room 정보 저장해두기
+
+                LobbyScreen.setRoomInfo(serverRoomUpdateEvent.getRoomInfo());
+
                 screenController.showScreen(LobbyScreen.screenName);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);

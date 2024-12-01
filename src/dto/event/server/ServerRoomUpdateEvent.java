@@ -14,4 +14,8 @@ public class ServerRoomUpdateEvent extends Event {
     public ServerRoomUpdateEvent(RoomInfo roomInfo) {
         this.roomInfo = roomInfo;
     }
+
+    public RoomInfo getRoomInfo() {
+        return roomInfo;
+    }
 }
