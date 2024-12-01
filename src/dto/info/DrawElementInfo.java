@@ -16,4 +16,16 @@ public class DrawElementInfo {
         this.thickness = thickness;
         this.mouseAct = mouseAct;
     }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public int getThickness() {
+        return thickness;
+    }
+
+    public Point getCoordinate() {
+        return coordinate;
+    }
 }
