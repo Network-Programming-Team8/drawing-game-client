@@ -81,18 +81,18 @@ public class LoginScreen extends Screen {
                 JOptionPane.showMessageDialog(this, "Please enter a nickname.", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, "Nickname submitted: " + nickname, "Success", JOptionPane.INFORMATION_MESSAGE);
-            }
 
-            try {
-                screenController.sendToServer(new Message(CLIENT_LOGIN_EVENT, new ClientLoginEvent(nickname)));
-                Message message = screenController.receiveFromServer();
-                ServerLoginEvent serverLoginEvent = (ServerLoginEvent)message.getMsgDTO();
+                try {
+                    screenController.sendToServer(new Message(CLIENT_LOGIN_EVENT, new ClientLoginEvent(nickname)));
+                    Message message = screenController.receiveFromServer();
+                    ServerLoginEvent serverLoginEvent = (ServerLoginEvent) message.getMsgDTO();
 //                System.out.println(serverLoginEvent.getId());
-                screenController.showScreen(RoomListScreen.screenName);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            } catch (ClassNotFoundException ex) {
-                throw new RuntimeException(ex);
+                    screenController.showScreen(RoomListScreen.screenName);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                } catch (ClassNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
         mainPanel.add(submitButton);
