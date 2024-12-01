@@ -4,22 +4,22 @@ import dto.event.Event;
 
 import java.io.Serial;
 
-public class ClientCreateRoomEvent extends Event {
+public class ClientReadyRoomEvent extends Event {
 
     @Serial
-    private static final long serialVersionUID = -8210692791240086745L;
+    private static final long serialVersionUID = 188014085743026298L;
     private final int drawTimeLimit;
     private final int participantLimit;
 
-    public ClientCreateRoomEvent(int drawTimeLimit, int participantLimit){
+    public ClientReadyRoomEvent(int drawTimeLimit, int participantLimit) {
         this.drawTimeLimit = drawTimeLimit;
         this.participantLimit = participantLimit;
     }
 
-    public int getDrawTimeLimit(){
-        return drawTimeLimit;
-    }
     public int getParticipantLimit() {
         return participantLimit;
+    }
+    public int getDrawTimeLimit() {
+        return drawTimeLimit;
     }
 }
