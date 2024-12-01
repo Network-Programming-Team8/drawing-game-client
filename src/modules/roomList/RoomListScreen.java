@@ -6,6 +6,7 @@ import dto.event.client.ClientJoinRoomEvent;
 import dto.event.server.ServerCreateRoomEvent;
 import dto.event.server.ServerRoomUpdateEvent;
 import message.Message;
+import modules.lobby.LobbyScreen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,6 +62,7 @@ public class RoomListScreen  extends Screen {
                 Message message = screenController.receiveFromServer();
                 ServerCreateRoomEvent serverCreateRoomEvent = (ServerCreateRoomEvent) message.getMsgDTO();
                 //TODO : 서버에서 받은 room 정보 저장해두기
+                screenController.showScreen(LobbyScreen.screenName);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             } catch (ClassNotFoundException ex) {
@@ -99,6 +101,7 @@ public class RoomListScreen  extends Screen {
                 Message message = screenController.receiveFromServer();
                 ServerRoomUpdateEvent serverRoomUpdateEvent = (ServerRoomUpdateEvent) message.getMsgDTO();
                 //TODO : 서버에서 받은 room 정보 저장해두기
+                screenController.showScreen(LobbyScreen.screenName);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             } catch (ClassNotFoundException ex) {

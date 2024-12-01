@@ -1,5 +1,6 @@
 package common.screen;
 
+import modules.lobby.LobbyScreen;
 import modules.login.LoginScreen;
 import modules.roomList.RoomListScreen;
 
@@ -30,6 +31,7 @@ public class ScreenFrame extends JFrame {
 
         screenController.addScreen(new LoginScreen(), LoginScreen.screenName);
         screenController.addScreen(new RoomListScreen(), RoomListScreen.screenName);
+        screenController.addScreen(new LobbyScreen(), LobbyScreen.screenName);
 
         add(screenController);
     }
