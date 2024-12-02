@@ -9,39 +9,45 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO:
 public class DrawingPanel extends JPanel {
     private List<DrawElementInfo> drawElements;
     private int currentDrawer;
     private boolean isCurrentDrawer;
+    private DrawingController controller;
 
-    public DrawingPanel() {
+    public DrawingPanel(DrawingController controller) {
+        this.controller = controller;
         drawElements = new ArrayList<>();
         setBackground(Color.WHITE);
-        addMouseListener(new MouseAdapter() {
+        setPreferredSize(new Dimension(400, 400));
+        setupMouseListeners();
+    }
+
+    private void setupMouseListeners() {
+        MouseAdapter mouseAdapter = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (isCurrentDrawer) {
                     addDrawElement(e);
                 }
             }
-        });
-        setSize(400, 400);
-        addMouseMotionListener(new MouseMotionAdapter() {
+
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (isCurrentDrawer) {
                     addDrawElement(e);
                 }
             }
-        });
+        };
+        addMouseListener(mouseAdapter);
+        addMouseMotionListener(mouseAdapter);
     }
 
     private void addDrawElement(MouseEvent e) {
-        DrawElementInfo element = new DrawElementInfo(e.getPoint(), getCurrentColor(), getCurrentThickness(), e);
+        DrawElementInfo element = new DrawElementInfo(e.getPoint(), controller.getCurrentColor(), controller.getCurrentThickness(), e);
         drawElements.add(element);
         repaint();
-//        TODO: socket event
+        controller.sendDrawEvent(element);
     }
 
     @Override
@@ -58,7 +64,7 @@ public class DrawingPanel extends JPanel {
 
     public void setCurrentDrawer(int drawer) {
         this.currentDrawer = drawer;
-        this.isCurrentDrawer = (drawer == getCurrentUserId());
+        this.isCurrentDrawer = (drawer == controller.getCurrentUserId());
     }
 
     public void addRemoteDrawElement(ClientDrawEvent event) {
@@ -66,18 +72,13 @@ public class DrawingPanel extends JPanel {
         repaint();
     }
 
-    private Color getCurrentColor() {
-//        TODO:
-        return Color.BLACK;
+    public void clearDrawing() {
+        drawElements.clear();
+        repaint();
     }
 
-    private int getCurrentThickness() {
-//        TODO:
-        return 2;
-    }
-
-    private int getCurrentUserId() {
-//        TODO:
-        return 0;
+    public void setDrawElements(List<DrawElementInfo> elements) {
+        this.drawElements = new ArrayList<>(elements);
+        repaint();
     }
 }
