@@ -5,10 +5,27 @@ import dto.info.RoomInfo;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class LobbyScreen extends Screen {
     public static final String screenName = "LOBBY_SCREEN";
-    private static RoomInfo roomInfo;
+    private static JPanel roomInfoPanel;
+    public static RoomInfo roomInfo = new RoomInfo(-1, -1, -1, new ArrayList<>());
+
+    // NOTE: swing을 한번 constructor에서 그리고나면, 값이 변경되어도 화면이 다시 그려지지 않음. 그렇기에 invokeLater 호출 필요.
+    public static void updateRoomInfoOnSwing(){
+        SwingUtilities.invokeLater(() -> {
+            if (roomInfo.getId() != -1) {
+                roomInfoPanel.removeAll();
+                JLabel setting1 = new JLabel(String.format("그리기 제한 시간: %d초", roomInfo.getDrawTimeLimit()));
+                JLabel setting2 = new JLabel(String.format("최대 참가자 수: %d명", roomInfo.getParticipantLimit()));
+                roomInfoPanel.add(setting1);
+                roomInfoPanel.add(setting2);
+                roomInfoPanel.revalidate();
+                roomInfoPanel.repaint();
+            }
+        });
+    }
 
     public LobbyScreen() {
         setSize(800, 600);
@@ -55,15 +72,17 @@ public class LobbyScreen extends Screen {
         settingsPanel.setBorder(BorderFactory.createTitledBorder("설정 및 준비"));
 
         // 방 설정 정보
-        JPanel roomInfoPanel = new JPanel();
+        roomInfoPanel = new JPanel();
         roomInfoPanel.setLayout(new BoxLayout(roomInfoPanel, BoxLayout.Y_AXIS));
         roomInfoPanel.setBorder(BorderFactory.createTitledBorder("방 설정 정보"));
         roomInfoPanel.setBackground(Color.decode("#fff9c4"));
 
-        JLabel setting1 = new JLabel("그리기 제한 시간: 60초");
-        JLabel setting2 = new JLabel("최대 참가자 수: 8명");
-        roomInfoPanel.add(setting1);
-        roomInfoPanel.add(setting2);
+        roomInfoPanel = new JPanel();
+        roomInfoPanel.setLayout(new BoxLayout(roomInfoPanel, BoxLayout.Y_AXIS));
+        roomInfoPanel.setBorder(BorderFactory.createTitledBorder("방 설정 정보"));
+        roomInfoPanel.setBackground(Color.decode("#fff9c4"));
+
+        updateRoomInfoOnSwing(); // 초기 정보 설정
 
         // Ready 버튼
         JPanel readyPanel = new JPanel();
@@ -88,9 +107,5 @@ public class LobbyScreen extends Screen {
         add(rightPanel);
 
         setVisible(true);
-    }
-
-    public static void setRoomInfo(RoomInfo room) {
-        roomInfo = room;
     }
 }

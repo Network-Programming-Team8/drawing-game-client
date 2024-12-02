@@ -73,8 +73,8 @@ public class RoomListScreen  extends Screen {
                         serverCreateRoomEvent.getParticipantLimit(),
                         Arrays.asList(screenController.getUserInfo())
                 );
-                LobbyScreen.setRoomInfo(roomInfo);
-
+                LobbyScreen.roomInfo.fromRoomInfo(roomInfo);
+                LobbyScreen.updateRoomInfoOnSwing();
                 screenController.showScreen(LobbyScreen.screenName);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -114,7 +114,8 @@ public class RoomListScreen  extends Screen {
                 Message message = screenController.receiveFromServer();
                 ServerRoomUpdateEvent serverRoomUpdateEvent = (ServerRoomUpdateEvent) message.getMsgDTO();
 
-                LobbyScreen.setRoomInfo(serverRoomUpdateEvent.getRoomInfo());
+                LobbyScreen.roomInfo.fromRoomInfo(serverRoomUpdateEvent.getRoomInfo());
+                LobbyScreen.updateRoomInfoOnSwing();
 
                 screenController.showScreen(LobbyScreen.screenName);
             } catch (IOException ex) {
