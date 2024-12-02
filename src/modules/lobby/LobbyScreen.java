@@ -17,8 +17,10 @@ public class LobbyScreen extends Screen {
         SwingUtilities.invokeLater(() -> {
             if (roomInfo.getId() != -1) {
                 roomInfoPanel.removeAll();
+                JLabel roomIdLabel = new JLabel(String.format("방 ID: %d", roomInfo.getId()));
                 JLabel setting1 = new JLabel(String.format("그리기 제한 시간: %d초", roomInfo.getDrawTimeLimit()));
                 JLabel setting2 = new JLabel(String.format("최대 참가자 수: %d명", roomInfo.getParticipantLimit()));
+                roomInfoPanel.add(roomIdLabel);
                 roomInfoPanel.add(setting1);
                 roomInfoPanel.add(setting2);
                 roomInfoPanel.revalidate();
@@ -72,11 +74,6 @@ public class LobbyScreen extends Screen {
         settingsPanel.setBorder(BorderFactory.createTitledBorder("설정 및 준비"));
 
         // 방 설정 정보
-        roomInfoPanel = new JPanel();
-        roomInfoPanel.setLayout(new BoxLayout(roomInfoPanel, BoxLayout.Y_AXIS));
-        roomInfoPanel.setBorder(BorderFactory.createTitledBorder("방 설정 정보"));
-        roomInfoPanel.setBackground(Color.decode("#fff9c4"));
-
         roomInfoPanel = new JPanel();
         roomInfoPanel.setLayout(new BoxLayout(roomInfoPanel, BoxLayout.Y_AXIS));
         roomInfoPanel.setBorder(BorderFactory.createTitledBorder("방 설정 정보"));
