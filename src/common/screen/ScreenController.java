@@ -14,18 +14,14 @@ public class ScreenController extends JPanel {
     private static final long serialVersionUID = 1L;
     private CardLayout cardLayout;
 
-    private ClientSocket clientSocket;
-    private final ObjectInputStream in;
     private final ObjectOutputStream out;
 
     private UserInfo userInfo;
 
 //    private final Map<String, DTOClass> dtoMapper;
 
-    public ScreenController() throws IOException {
-        clientSocket = new ClientSocket();
-        out = clientSocket.getObjectOutputStream();
-        in = clientSocket.getObjectInputStream();
+    public ScreenController(ObjectOutputStream out) throws IOException {
+        this.out = out;
         cardLayout = new CardLayout();
         setLayout(cardLayout);
     }
@@ -39,10 +35,6 @@ public class ScreenController extends JPanel {
 
     public void sendToServer(Message message) throws IOException {
         out.writeObject(message);
-    }
-
-    public Message receiveFromServer() throws IOException, ClassNotFoundException {
-        return (Message) in.readObject();
     }
 
     public void setUserInfo(UserInfo userInfo) {

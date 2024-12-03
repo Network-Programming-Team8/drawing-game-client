@@ -61,24 +61,7 @@ public class RoomListScreen  extends Screen {
             ClientCreateRoomEvent clientCreateRoomEvent = getCreateRoomDTOFromTextField(createPanel, timeLimitField, participantLimitField);
             try {
                 screenController.sendToServer(new Message(CLIENT_CREATE_ROOM_EVENT, clientCreateRoomEvent));
-                Message message = screenController.receiveFromServer();
-                ServerCreateRoomEvent serverCreateRoomEvent = (ServerCreateRoomEvent) message.getMsgDTO();
-
-                RoomInfo roomInfo = new RoomInfo(
-                        serverCreateRoomEvent.getId(),
-                        serverCreateRoomEvent.getDrawTimeLimit(),
-                        serverCreateRoomEvent.getParticipantLimit(),
-                        Arrays.asList(screenController.getUserInfo())
-                );
-                LobbyScreen.roomInfo.fromRoomInfo(roomInfo);
-
-                LobbyScreen.updateRoomInfoOnSwing();
-                LobbyScreen.updateUserFieldOnSwing();
-
-                screenController.showScreen(LobbyScreen.screenName);
             } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            } catch (ClassNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
         });
@@ -111,18 +94,7 @@ public class RoomListScreen  extends Screen {
             ClientJoinRoomEvent clientJoinRoomEvent = getJoinRoomDTOFromTextField(createPanel, roomIdField);
             try {
                 screenController.sendToServer(new Message(CLIENT_JOIN_ROOM_EVENT, clientJoinRoomEvent));
-                Message message = screenController.receiveFromServer();
-                ServerRoomUpdateEvent serverRoomUpdateEvent = (ServerRoomUpdateEvent) message.getMsgDTO();
-
-                LobbyScreen.roomInfo.fromRoomInfo(serverRoomUpdateEvent.getRoomInfo());
-
-                LobbyScreen.updateRoomInfoOnSwing();
-                LobbyScreen.updateUserFieldOnSwing();
-
-                screenController.showScreen(LobbyScreen.screenName);
             } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            } catch (ClassNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
         });

@@ -85,13 +85,7 @@ public class LoginScreen extends Screen {
 
                 try {
                     screenController.sendToServer(new Message(CLIENT_LOGIN_EVENT, new ClientLoginEvent(nickname)));
-                    Message message = screenController.receiveFromServer();
-                    ServerLoginEvent serverLoginEvent = (ServerLoginEvent) message.getMsgDTO();
-                    screenController.setUserInfo(new UserInfo(serverLoginEvent.getId(), serverLoginEvent.getNickname(), true));
-                    screenController.showScreen(RoomListScreen.screenName);
                 } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                } catch (ClassNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
             }
