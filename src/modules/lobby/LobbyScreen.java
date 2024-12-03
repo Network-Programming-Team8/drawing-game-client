@@ -15,8 +15,12 @@ import static message.MessageType.CLIENT_ROOM_CHAT_MESSAGE;
 
 public class LobbyScreen extends Screen {
     public static final String screenName = "LOBBY_SCREEN";
+
     private static JPanel roomInfoPanel;
     private static JPanel userPanel;
+    private static DefaultListModel<String> chatModel;
+    private static JList<String> chatList;
+
     public static RoomInfo roomInfo = new RoomInfo(-1, -1, -1, new ArrayList<>());
 
     // NOTE: swing을 한번 constructor에서 그리고나면, 값이 변경되어도 화면이 다시 그려지지 않음. 그렇기에 invokeLater 호출 필요.
@@ -73,23 +77,63 @@ public class LobbyScreen extends Screen {
         // 우측 채팅 및 설정 영역
         JPanel rightPanel = new JPanel(new GridLayout(2, 1)); // 위아래로 나뉜 레이아웃
 
+//        // 채팅 영역
+//        JPanel chatPanel = new JPanel(new BorderLayout());
+//        chatPanel.setBorder(BorderFactory.createTitledBorder("채팅 창"));
+//        chatPanel.setBackground(Color.decode("#e3f2fd"));
+//
+//        JTextArea chatArea = new JTextArea();
+//        chatArea.setEditable(false); // 채팅 기록은 읽기 전용
+//        JScrollPane chatScrollPane = new JScrollPane(chatArea);
+//
+//        JTextField chatInputField = new JTextField();
+//        JButton sendButton = new JButton("Send");
+//        sendButton.addActionListener(e->{
+//            try {
+//                ClientRoomChatMessage dto = new ClientRoomChatMessage(chatInputField.getText());
+//                screenController.sendToServer(new Message(CLIENT_ROOM_CHAT_MESSAGE, dto));
+//            } catch (IOException ex) {
+//                throw new RuntimeException(ex);
+//            }
+//        });
+
         // 채팅 영역
         JPanel chatPanel = new JPanel(new BorderLayout());
         chatPanel.setBorder(BorderFactory.createTitledBorder("채팅 창"));
         chatPanel.setBackground(Color.decode("#e3f2fd"));
 
-        JTextArea chatArea = new JTextArea();
-        chatArea.setEditable(false); // 채팅 기록은 읽기 전용
-        JScrollPane chatScrollPane = new JScrollPane(chatArea);
+        // 채팅 기록 모델 및 JList 설정
+        chatModel = new DefaultListModel<>();
+        chatList = new JList<>(chatModel);
+        chatList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        chatList.setVisibleRowCount(10); // 보여질 행 수
+        chatList.setFixedCellHeight(20);
+        chatList.setFixedCellWidth(300);
 
+        // 채팅 스크롤 패널
+        JScrollPane chatScrollPane = new JScrollPane(chatList);
+        chatPanel.add(chatScrollPane, BorderLayout.CENTER);
+
+        // 채팅 입력 및 전송 버튼
         JTextField chatInputField = new JTextField();
         JButton sendButton = new JButton("Send");
-        sendButton.addActionListener(e->{
-            try {
-                ClientRoomChatMessage dto = new ClientRoomChatMessage(chatInputField.getText());
-                screenController.sendToServer(new Message(CLIENT_ROOM_CHAT_MESSAGE, dto));
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
+
+        // 전송 버튼 동작
+        sendButton.addActionListener(e -> {
+            String message = chatInputField.getText().trim();
+            if (!message.isEmpty()) {
+                try {
+                    // 서버로 전송
+                    ClientRoomChatMessage dto = new ClientRoomChatMessage(message);
+                    screenController.sendToServer(new Message(CLIENT_ROOM_CHAT_MESSAGE, dto));
+
+                    // 클라이언트에 채팅 추가 (서버 응답 처리 이전 가정)
+                    addChatMessage(chatModel, "나: " + message);
+                    chatInputField.setText(""); // 입력 필드 초기화
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(chatPanel, "메시지 전송 실패!", "Error", JOptionPane.ERROR_MESSAGE);
+                    ex.printStackTrace();
+                }
             }
         });
 
@@ -135,5 +179,21 @@ public class LobbyScreen extends Screen {
         add(rightPanel);
 
         setVisible(true);
+    }
+
+
+    // 채팅 추가 함수
+    private static void addChatMessage(DefaultListModel<String> chatModel, String message) {
+        int maxMessages = 5; // 최대 채팅 기록 수
+        if (chatModel.getSize() >= maxMessages) {
+            chatModel.remove(0); // 오래된 메시지 제거
+        }
+        chatModel.addElement(message); // 새 메시지 추가
+        chatList.ensureIndexIsVisible(chatModel.getSize() - 1); // 스크롤 최신화
+    }
+
+    // 서버로부터 메시지를 받을 때 처리
+    public static void receiveChatMessage(String serverMessage) {
+        SwingUtilities.invokeLater(() -> addChatMessage(chatModel, serverMessage));
     }
 }

@@ -3,6 +3,7 @@ package utils;
 import common.screen.ScreenController;
 import dto.event.server.ServerCreateRoomEvent;
 import dto.event.server.ServerLoginEvent;
+import dto.event.server.ServerRoomChatMessage;
 import dto.event.server.ServerRoomUpdateEvent;
 import dto.info.RoomInfo;
 import dto.info.UserInfo;
@@ -49,6 +50,9 @@ public class ServerListener implements Runnable {
             case SERVER_ROOM_UPDATE_EVENT:
                 handleServerRoomUpdateEvent(message);
                 break;
+            case SERVER_ROOM_CHAT_MESSAGE:
+                handleServerRoomChatMessage(message);
+                break;
         }
     }
 
@@ -84,5 +88,11 @@ public class ServerListener implements Runnable {
         LobbyScreen.updateUserFieldOnSwing();
 
         screenController.showScreen(LobbyScreen.screenName);
+    }
+
+    private void handleServerRoomChatMessage(Message message){
+        ServerRoomChatMessage serverRoomChatMessage = (ServerRoomChatMessage) message.getMsgDTO();
+
+        LobbyScreen.receiveChatMessage(serverRoomChatMessage.getSpeaker() + ": " + serverRoomChatMessage.getMessage());
     }
 }
