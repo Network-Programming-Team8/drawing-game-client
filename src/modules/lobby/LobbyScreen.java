@@ -1,12 +1,17 @@
 package modules.lobby;
 
 import common.screen.Screen;
+import dto.event.client.ClientRoomChatMessage;
 import dto.info.RoomInfo;
 import dto.info.UserInfo;
+import message.Message;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import static message.MessageType.CLIENT_ROOM_CHAT_MESSAGE;
 
 public class LobbyScreen extends Screen {
     public static final String screenName = "LOBBY_SCREEN";
@@ -79,6 +84,14 @@ public class LobbyScreen extends Screen {
 
         JTextField chatInputField = new JTextField();
         JButton sendButton = new JButton("Send");
+        sendButton.addActionListener(e->{
+            try {
+                ClientRoomChatMessage dto = new ClientRoomChatMessage(chatInputField.getText());
+                screenController.sendToServer(new Message(CLIENT_ROOM_CHAT_MESSAGE, dto));
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
         JPanel chatInputPanel = new JPanel(new BorderLayout());
         chatInputPanel.add(chatInputField, BorderLayout.CENTER);

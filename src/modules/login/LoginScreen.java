@@ -2,10 +2,7 @@ package modules.login;
 
 import common.screen.Screen;
 import dto.event.client.ClientLoginEvent;
-import dto.event.server.ServerLoginEvent;
-import dto.info.UserInfo;
 import message.Message;
-import modules.roomList.RoomListScreen;
 
 import javax.swing.*;
 import java.awt.*;
