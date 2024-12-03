@@ -5,6 +5,7 @@ import dto.event.server.*;
 import dto.info.RoomInfo;
 import dto.info.UserInfo;
 import message.Message;
+import modules.game.GameScreen;
 import modules.lobby.LobbyScreen;
 import modules.roomList.RoomListScreen;
 
@@ -100,5 +101,6 @@ public class ServerListener implements Runnable {
         ServerRequestTopicEvent serverRequestTopicEvent = (ServerRequestTopicEvent) message.getMsgDTO();
 
         LobbyScreen.showTopicInputDialog();
+        screenController.showScreen(GameScreen.screenName);
     }
 }

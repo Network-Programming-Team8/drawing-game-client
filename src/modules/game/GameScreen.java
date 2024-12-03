@@ -9,6 +9,7 @@ import dto.info.DrawElementInfo;
 import java.util.List;
 
 public class GameScreen extends Screen {
+    public static final String screenName = "GAME_SCREEN";
     private DrawingController drawingController;
 
     public GameScreen(ScreenController screenController) {
