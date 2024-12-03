@@ -1,8 +1,14 @@
 package dto.info;
 
+import dto.event.Event;
+
+import java.io.Serial;
 import java.util.List;
 
-public class RoomInfo {
+public class RoomInfo extends Event {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
     private int id;
     private int drawTimeLimit;
     private int participantLimit;

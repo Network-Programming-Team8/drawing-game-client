@@ -2,6 +2,7 @@ package modules.lobby;
 
 import common.screen.Screen;
 import dto.info.RoomInfo;
+import dto.info.UserInfo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 public class LobbyScreen extends Screen {
     public static final String screenName = "LOBBY_SCREEN";
     private static JPanel roomInfoPanel;
+    private static JPanel userPanel;
     public static RoomInfo roomInfo = new RoomInfo(-1, -1, -1, new ArrayList<>());
 
     // NOTE: swing을 한번 constructor에서 그리고나면, 값이 변경되어도 화면이 다시 그려지지 않음. 그렇기에 invokeLater 호출 필요.
@@ -25,6 +27,13 @@ public class LobbyScreen extends Screen {
                 roomInfoPanel.add(setting2);
                 roomInfoPanel.revalidate();
                 roomInfoPanel.repaint();
+
+                java.util.List<UserInfo> userList = roomInfo.getUserInfoList();
+                for (int i = 0; i < userList.size(); i++) {
+                    ((JLabel)userPanel.getComponent(i)).setText(userList.get(i).getNickname());
+                }
+                userPanel.revalidate();
+                userPanel.repaint();
             }
         });
     }
@@ -34,13 +43,12 @@ public class LobbyScreen extends Screen {
         setLayout(new GridLayout(1, 2)); // 좌우로 나뉜 레이아웃
 
         // 좌측 사용자 정보 영역 (GridLayout 사용)
-        JPanel userPanel = new JPanel(new GridLayout(0, 3, 10, 10)); // 3열 그리드
+        userPanel = new JPanel(new GridLayout(0, 3, 10, 10)); // 3열 그리드
         userPanel.setBorder(BorderFactory.createTitledBorder("사용자 목록"));
         userPanel.setBackground(Color.decode("#f1f8e9"));
 
-        // 예시 사용자 정보 추가
-        for (int i = 1; i <= 9; i++) {
-            JLabel userLabel = new JLabel("User " + i, SwingConstants.CENTER);
+        for (int i = 0; i < 9; i++) {
+            JLabel userLabel = new JLabel("", SwingConstants.CENTER);
             userLabel.setOpaque(true);
             userLabel.setBackground(Color.decode("#c8e6c9"));
             userLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
