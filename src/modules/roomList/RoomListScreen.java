@@ -52,7 +52,7 @@ public class RoomListScreen  extends Screen {
 
         // 참여자 수 제한 입력
         JTextField participantLimitField = new JTextField(15);
-        participantLimitField.setBorder(BorderFactory.createTitledBorder("참여자 수 제한"));
+        participantLimitField.setBorder(BorderFactory.createTitledBorder("참여자 수"));
         participantLimitField.setMaximumSize(new Dimension(200, 40));
         createPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         createPanel.add(participantLimitField);
