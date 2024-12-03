@@ -1,7 +1,6 @@
 package modules.login;
 
 import common.screen.Screen;
-import domain.User;
 import dto.event.client.ClientLoginEvent;
 import dto.event.server.ServerLoginEvent;
 import dto.info.UserInfo;

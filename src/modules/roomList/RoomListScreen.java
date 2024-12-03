@@ -1,20 +1,17 @@
 package modules.roomList;
 
 import common.screen.Screen;
-import domain.User;
 import dto.event.client.ClientCreateRoomEvent;
 import dto.event.client.ClientJoinRoomEvent;
 import dto.event.server.ServerCreateRoomEvent;
 import dto.event.server.ServerRoomUpdateEvent;
 import dto.info.RoomInfo;
-import dto.info.UserInfo;
 import message.Message;
 import modules.lobby.LobbyScreen;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import static message.MessageType.CLIENT_CREATE_ROOM_EVENT;
