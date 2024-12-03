@@ -71,7 +71,10 @@ public class RoomListScreen  extends Screen {
                         Arrays.asList(screenController.getUserInfo())
                 );
                 LobbyScreen.roomInfo.fromRoomInfo(roomInfo);
+
                 LobbyScreen.updateRoomInfoOnSwing();
+                LobbyScreen.updateUserFieldOnSwing();
+
                 screenController.showScreen(LobbyScreen.screenName);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -112,7 +115,9 @@ public class RoomListScreen  extends Screen {
                 ServerRoomUpdateEvent serverRoomUpdateEvent = (ServerRoomUpdateEvent) message.getMsgDTO();
 
                 LobbyScreen.roomInfo.fromRoomInfo(serverRoomUpdateEvent.getRoomInfo());
+
                 LobbyScreen.updateRoomInfoOnSwing();
+                LobbyScreen.updateUserFieldOnSwing();
 
                 screenController.showScreen(LobbyScreen.screenName);
             } catch (IOException ex) {

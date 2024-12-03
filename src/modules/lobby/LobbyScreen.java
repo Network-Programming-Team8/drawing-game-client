@@ -18,6 +18,7 @@ public class LobbyScreen extends Screen {
     public static void updateRoomInfoOnSwing(){
         SwingUtilities.invokeLater(() -> {
             if (roomInfo.getId() != -1) {
+                //방 설정 정보 update
                 roomInfoPanel.removeAll();
                 JLabel roomIdLabel = new JLabel(String.format("방 ID: %d", roomInfo.getId()));
                 JLabel setting1 = new JLabel(String.format("그리기 제한 시간: %d초", roomInfo.getDrawTimeLimit()));
@@ -27,14 +28,22 @@ public class LobbyScreen extends Screen {
                 roomInfoPanel.add(setting2);
                 roomInfoPanel.revalidate();
                 roomInfoPanel.repaint();
-
-                java.util.List<UserInfo> userList = roomInfo.getUserInfoList();
-                for (int i = 0; i < userList.size(); i++) {
-                    ((JLabel)userPanel.getComponent(i)).setText(userList.get(i).getNickname());
-                }
-                userPanel.revalidate();
-                userPanel.repaint();
             }
+        });
+    }
+
+    public static void updateUserFieldOnSwing(){
+        SwingUtilities.invokeLater(() -> {
+            //유저 목록 update
+            java.util.List<UserInfo> userList = roomInfo.getUserInfoList();
+            for (int i = 0; i < userList.size(); i++) {
+                JLabel targetUserArea = (JLabel) userPanel.getComponent(i);
+                targetUserArea.setText(userList.get(i).getNickname());
+                targetUserArea.setBackground(Color.decode("#c8e6c9"));
+                targetUserArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            }
+            userPanel.revalidate();
+            userPanel.repaint();
         });
     }
 
@@ -50,10 +59,11 @@ public class LobbyScreen extends Screen {
         for (int i = 0; i < 9; i++) {
             JLabel userLabel = new JLabel("", SwingConstants.CENTER);
             userLabel.setOpaque(true);
-            userLabel.setBackground(Color.decode("#c8e6c9"));
-            userLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            userLabel.setBackground(Color.decode("#f1f8e9"));
             userPanel.add(userLabel);
         }
+
+        updateUserFieldOnSwing(); // 유저 field 초기화
 
         // 우측 채팅 및 설정 영역
         JPanel rightPanel = new JPanel(new GridLayout(2, 1)); // 위아래로 나뉜 레이아웃
