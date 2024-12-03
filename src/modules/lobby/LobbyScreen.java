@@ -3,6 +3,7 @@ package modules.lobby;
 import common.screen.Screen;
 import dto.event.client.ClientReadyEvent;
 import dto.event.client.ClientRoomChatMessage;
+import dto.event.client.ClientSuggestTopicEvent;
 import dto.info.RoomInfo;
 import dto.info.UserInfo;
 import message.Message;
@@ -12,8 +13,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static message.MessageType.CLIENT_READY_EVENT;
-import static message.MessageType.CLIENT_ROOM_CHAT_MESSAGE;
+import static message.MessageType.*;
 
 public class LobbyScreen extends Screen {
     public static final String screenName = "LOBBY_SCREEN";
@@ -202,5 +202,59 @@ public class LobbyScreen extends Screen {
         readyPanel.add(Box.createVerticalGlue()); // 아래쪽 여백
 
         return readyPanel;
+    }
+
+    public static void showTopicInputDialog() {
+        // 다이얼로그 생성
+        JDialog dialog = new JDialog();
+        dialog.setTitle("TOPIC INPUT");
+
+        dialog.setLayout(new BorderLayout());
+        dialog.setSize(300, 200);
+
+        // 입력 필드 및 레이블
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JLabel instructionLabel = new JLabel("그림 주제를 제안해주세요");
+        instructionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        inputPanel.add(instructionLabel);
+
+        JTextField inputField = new JTextField(15);
+        inputField.setMaximumSize(new Dimension(200, 30));
+        inputField.setAlignmentX(Component.CENTER_ALIGNMENT);
+        inputPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        inputPanel.add(inputField);
+
+        dialog.add(inputPanel, BorderLayout.CENTER);
+
+        // 버튼
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton confirmButton = new JButton("Confirm");
+
+        confirmButton.addActionListener(e -> {
+            String inputValue = inputField.getText().trim();
+            if (!inputValue.isEmpty()) {
+                JOptionPane.showMessageDialog(dialog, "Input received: " + inputValue);
+
+                try {
+                    screenController.sendToServer(new Message(CLIENT_SUGGEST_TOPIC_EVENT, new ClientSuggestTopicEvent(inputValue)));
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                dialog.dispose();
+            } else {
+                JOptionPane.showMessageDialog(dialog, "Please enter a value.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        buttonPanel.add(confirmButton);
+
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+        // 다이얼로그 표시
+        dialog.setVisible(true);
     }
 }
