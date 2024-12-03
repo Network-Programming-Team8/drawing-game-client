@@ -1,6 +1,7 @@
 package modules.lobby;
 
 import common.screen.Screen;
+import dto.event.client.ClientReadyEvent;
 import dto.event.client.ClientRoomChatMessage;
 import dto.info.RoomInfo;
 import dto.info.UserInfo;
@@ -11,6 +12,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static message.MessageType.CLIENT_READY_EVENT;
 import static message.MessageType.CLIENT_ROOM_CHAT_MESSAGE;
 
 public class LobbyScreen extends Screen {
@@ -22,6 +24,7 @@ public class LobbyScreen extends Screen {
     private static JList<String> chatList;
 
     public static RoomInfo roomInfo = new RoomInfo(-1, -1, -1, new ArrayList<>());
+    private boolean isReady = false;
 
     // NOTE: swing을 한번 constructor에서 그리고나면, 값이 변경되어도 화면이 다시 그려지지 않음. 그렇기에 invokeLater 호출 필요.
     public static void updateRoomInfoOnSwing(){
@@ -185,6 +188,15 @@ public class LobbyScreen extends Screen {
         readyPanel.setBackground(Color.decode("#ffcdd2"));
 
         JButton readyButton = new JButton("Ready");
+        readyButton.addActionListener(e->{
+            try {
+                isReady = !isReady;
+                screenController.sendToServer(new Message(CLIENT_READY_EVENT, new ClientReadyEvent(isReady)));
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
         readyPanel.add(Box.createVerticalGlue()); // 위쪽 여백
         readyPanel.add(readyButton);
         readyPanel.add(Box.createVerticalGlue()); // 아래쪽 여백
