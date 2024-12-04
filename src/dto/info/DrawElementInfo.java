@@ -2,9 +2,12 @@ package dto.info;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.io.Serial;
 
-public class DrawElementInfo {
+public class DrawElementInfo implements Info {
 
+    @Serial
+    private static final long serialVersionUID = 1022185716081833550L;
     private final Point coordinate;
     private final Color color;
     private final int thickness;

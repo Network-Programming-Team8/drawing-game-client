@@ -8,7 +8,7 @@ import java.util.List;
 public class RoomInfo extends Event {
 
     @Serial
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 4138183250339217845L;
     private int id;
     private int drawTimeLimit;
     private int participantLimit;

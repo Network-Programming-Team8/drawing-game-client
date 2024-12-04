@@ -13,4 +13,8 @@ public class ServerErrorEvent extends Event {
     public ServerErrorEvent(String errorMsg) {
         this.errorMsg = errorMsg;
     }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
 }

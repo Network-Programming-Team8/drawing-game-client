@@ -50,6 +50,8 @@ public class ScreenFrame extends JFrame {
         screenController.addScreen(new LobbyScreen(), LobbyScreen.screenName);
 
         add(screenController);
+
+        SwingUtilities.invokeLater(screenController::initializeGlassPane);
     }
 
     private void setServerListener() {
