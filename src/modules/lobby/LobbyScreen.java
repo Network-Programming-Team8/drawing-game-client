@@ -85,7 +85,7 @@ public class LobbyScreen extends Screen {
     public static void updateUserReadyStatus(){
         SwingUtilities.invokeLater(()->{
             java.util.List<UserInfo> userList = roomInfo.getUserInfoList();
-            System.out.println(userList.get(0).isReady());
+
             for (int i = 0; i < userList.size(); i++) {
                 String path = String.format("../../resources/person%d.png",(i%3)+1);
                 if(userList.get(i).isReady()){
@@ -270,7 +270,7 @@ public class LobbyScreen extends Screen {
         return readyPanel;
     }
 
-    public static void showTopicInputDialog() {
+    public static void showTopicInputDialog(JFrame parentFrame) {
         // 다이얼로그 생성
         JDialog dialog = new JDialog();
         dialog.setTitle(screenController.getUserInfo().getNickname());
@@ -319,6 +319,8 @@ public class LobbyScreen extends Screen {
         buttonPanel.add(confirmButton);
 
         dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+        dialog.setLocationRelativeTo(parentFrame);
 
         // 다이얼로그 표시
         dialog.setVisible(true);

@@ -9,6 +9,7 @@ import modules.game.GameScreen;
 import modules.lobby.LobbyScreen;
 import modules.roomList.RoomListScreen;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Arrays;
@@ -17,10 +18,12 @@ public class ServerListener implements Runnable {
 
     private final ScreenController screenController;
     private final ObjectInputStream in;
+    private final JFrame frame;
 
-    public ServerListener(ScreenController screenController, ObjectInputStream in) {
+    public ServerListener(ScreenController screenController, ObjectInputStream in, JFrame parentFrame) {
         this.screenController = screenController;
         this.in = in;
+        this.frame = parentFrame;
     }
 
     @Override
@@ -110,7 +113,7 @@ public class ServerListener implements Runnable {
     private void handleServerRequestTopicEvent(Message message){
         ServerRequestTopicEvent serverRequestTopicEvent = (ServerRequestTopicEvent) message.getMsgDTO();
 
-        LobbyScreen.showTopicInputDialog();
+        LobbyScreen.showTopicInputDialog(frame);
         screenController.showScreen(GameScreen.screenName);
     }
 

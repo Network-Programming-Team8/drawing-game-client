@@ -57,7 +57,7 @@ public class ScreenFrame extends JFrame {
     }
 
     private void setServerListener() {
-        Thread thread = new Thread(new ServerListener(screenController, in));
+        Thread thread = new Thread(new ServerListener(screenController, in, this));
         thread.start();
     }
 }
