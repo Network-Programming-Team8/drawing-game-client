@@ -1,12 +1,14 @@
 package modules.lobby;
 
 import common.screen.Screen;
+import dto.event.client.ClientExitRoomEvent;
 import dto.event.client.ClientReadyEvent;
 import dto.event.client.ClientRoomChatMessage;
 import dto.event.client.ClientSuggestTopicEvent;
 import dto.info.RoomInfo;
 import dto.info.UserInfo;
 import message.Message;
+import modules.roomList.RoomListScreen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -205,8 +207,19 @@ public class LobbyScreen extends Screen {
             }
         });
 
+        JButton exitButton = new JButton("Exit");
+        exitButton.addActionListener(e->{
+            try {
+                screenController.sendToServer(new Message(CLIENT_EXIT_ROOM_EVENT, new ClientExitRoomEvent()));
+                screenController.showScreen(RoomListScreen.screenName);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
         readyPanel.add(Box.createVerticalGlue()); // 위쪽 여백
         readyPanel.add(readyButton);
+        readyPanel.add(exitButton);
         readyPanel.add(Box.createVerticalGlue()); // 아래쪽 여백
 
         return readyPanel;
