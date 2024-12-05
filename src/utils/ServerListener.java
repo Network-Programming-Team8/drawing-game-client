@@ -11,6 +11,7 @@ import modules.lobby.LobbyScreen;
 import modules.roomList.RoomListScreen;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Arrays;
@@ -106,7 +107,12 @@ public class ServerListener implements Runnable {
         LobbyScreen.updateRoomInfoOnSwing();
         LobbyScreen.updateUserFieldOnSwing();
 
-        screenController.showScreen(LobbyScreen.screenName);
+        for(Component component : screenController.getComponents()){
+            if(component instanceof RoomListScreen && component.isVisible()){
+                screenController.showScreen(LobbyScreen.screenName);
+                break;
+            }
+        }
     }
 
     private void handleServerRoomChatMessage(Message message){
