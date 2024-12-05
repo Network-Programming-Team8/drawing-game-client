@@ -142,6 +142,11 @@ public class RoomListScreen  extends Screen {
             return null;
         }
 
+        if(participantLimit > 9) {
+            JOptionPane.showMessageDialog(createPanel, "참여자 수는 9명 제한입니다.", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+
         return new ClientCreateRoomEvent(timeLimit, participantLimit);
     }
 }
