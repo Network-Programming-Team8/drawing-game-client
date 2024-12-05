@@ -135,6 +135,7 @@ public class ServerListener implements Runnable {
 
         GameScreen.setGameInfoFromDTO(serverStartGameEvent);
         GameScreen.updateUserList();
+        GameScreen.updateRoomInfoPanel();
 
         screenController.showScreen(GameScreen.screenName);
     }
