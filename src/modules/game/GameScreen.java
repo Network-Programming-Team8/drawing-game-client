@@ -4,6 +4,7 @@ import common.drawing.DrawingController;
 import common.screen.Screen;
 import dto.event.server.ServerDrawEvent;
 import dto.event.server.ServerStartGameEvent;
+import dto.event.server.ServerTurnChangeEvent;
 import dto.info.UserInfo;
 import modules.lobby.LobbyScreen;
 
@@ -120,5 +121,9 @@ public class GameScreen extends Screen {
 
     public static void handleRemoteDrawEvent(ServerDrawEvent event){
         drawingController.handleRemoteDrawEvent(event);
+    }
+
+    public static void handleServerTurnChangeEvent(ServerTurnChangeEvent event){
+        drawingController.handleServerTurnChangeEvent(event);
     }
 }

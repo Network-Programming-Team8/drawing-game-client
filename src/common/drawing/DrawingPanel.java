@@ -7,6 +7,7 @@ import dto.info.DrawElementInfo;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +67,10 @@ public class DrawingPanel extends JPanel {
     public void setCurrentDrawer(int drawer) {
         this.currentDrawer = drawer;
         this.isCurrentDrawer = (drawer == controller.getCurrentUserId());
+    }
+
+    public void setIsCurrentDrawer(boolean isCurrentDrawer) {
+        this.isCurrentDrawer = isCurrentDrawer;
     }
 
     public void addRemoteDrawElement(ServerDrawEvent event) {

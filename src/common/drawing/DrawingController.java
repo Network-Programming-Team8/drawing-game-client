@@ -1,13 +1,16 @@
 package common.drawing;
 
 import common.screen.ScreenController;
+import dto.event.client.ClientDrawEvent;
 import dto.event.server.ServerDrawEvent;
+import dto.event.server.ServerTurnChangeEvent;
 import dto.info.DrawElementInfo;
 import message.Message;
 import message.MessageType;
 
 import java.awt.*;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class DrawingController {
@@ -18,6 +21,7 @@ public class DrawingController {
     private int currentThickness = 2;
     private ScreenController screenController;
     private static int timeout;
+    private LocalDateTime startTime;
 
     public DrawingController(ScreenController screenController) {
         this.screenController = screenController;
@@ -37,15 +41,27 @@ public class DrawingController {
 
     public void sendDrawEvent(DrawElementInfo element) {
         try {
-            ServerDrawEvent event = new ServerDrawEvent(currentUserId, element);
+            LocalDateTime submittedTime = LocalDateTime.now();
+            if(this.startTime.plusSeconds(timeout).isAfter(submittedTime)){
+                drawingPanel.setIsCurrentDrawer(false);
+                return ;
+            }
+            ClientDrawEvent event = new ClientDrawEvent(currentUserId, element, submittedTime);
             screenController.sendToServer(new Message(MessageType.CLIENT_DRAW_EVENT, event));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public void handleServerTurnChangeEvent(ServerTurnChangeEvent serverTurnChangeEvent){
+        this.currentDrawer = serverTurnChangeEvent.getNowTurn();
+        this.startTime = serverTurnChangeEvent.getStartTime();
+        drawingPanel.setCurrentDrawer(this.currentDrawer);
+    }
+
     public static void setCurrentUserId(int userId) {
         currentUserId = userId;
+
     }
 
     public static int getCurrentUserId() {

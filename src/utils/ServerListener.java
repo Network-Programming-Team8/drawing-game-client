@@ -141,8 +141,7 @@ public class ServerListener implements Runnable {
 
     private void handleServerTurnChangeEvent(Message message){
         ServerTurnChangeEvent serverTurnChangeEvent = (ServerTurnChangeEvent) message.getMsgDTO();
-
-        //TODO :
+        GameScreen.handleServerTurnChangeEvent(serverTurnChangeEvent);
     }
 
     private void handleServerDrawEvent(Message message){
