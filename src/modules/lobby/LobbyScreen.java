@@ -46,6 +46,14 @@ public class LobbyScreen extends Screen {
 
     public static void updateUserFieldOnSwing(){
         SwingUtilities.invokeLater(() -> {
+            //초기화
+            for (int i = 0; i < 9; i++) {
+                JLabel targetUserArea = (JLabel) userPanel.getComponent(i);
+                targetUserArea.setText("");
+                targetUserArea.setBackground(Color.decode("#f1f8e9"));
+                targetUserArea.setBorder(BorderFactory.createLineBorder(Color.decode("#f1f8e9")));
+            }
+
             //유저 목록 update
             java.util.List<UserInfo> userList = roomInfo.getUserInfoList();
             for (int i = 0; i < userList.size(); i++) {
