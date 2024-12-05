@@ -34,7 +34,7 @@ public class LobbyScreen extends Screen {
                 roomInfoPanel.removeAll();
                 JLabel roomIdLabel = new JLabel(String.format("방 ID: %d", roomInfo.getId()));
                 JLabel setting1 = new JLabel(String.format("그리기 제한 시간: %d초", roomInfo.getDrawTimeLimit()));
-                JLabel setting2 = new JLabel(String.format("최대 참가자 수: %d명", roomInfo.getParticipantLimit()));
+                JLabel setting2 = new JLabel(String.format("참여 참가자 수: %d명", roomInfo.getParticipantLimit()));
                 roomInfoPanel.add(roomIdLabel);
                 roomInfoPanel.add(setting1);
                 roomInfoPanel.add(setting2);
