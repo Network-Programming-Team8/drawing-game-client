@@ -2,7 +2,6 @@ package modules.game;
 
 import common.drawing.DrawingController;
 import common.screen.Screen;
-import common.screen.ScreenController;
 import dto.event.client.ClientDrawEvent;
 import dto.info.DrawElementInfo;
 
@@ -12,7 +11,7 @@ public class GameScreen extends Screen {
     public static final String screenName = "GAME_SCREEN";
     private DrawingController drawingController;
 
-    public GameScreen(ScreenController screenController) {
+    public GameScreen() {
         this.drawingController = new DrawingController(screenController);
         add(drawingController.getDrawingPanel());
 

@@ -57,6 +57,9 @@ public class ServerListener implements Runnable {
             case SERVER_ERROR_EVENT:
                 handleServerErrorEvent(message);
                 break;
+            case SERVER_START_GAME_EVENT:
+                handleServerStartGameEvent(message);
+                break;
 
         }
     }
@@ -114,5 +117,11 @@ public class ServerListener implements Runnable {
     private void handleServerErrorEvent(Message message){
         ServerErrorEvent serverErrorEvent = (ServerErrorEvent) message.getMsgDTO();
         screenController.showToast(serverErrorEvent.getErrorMsg());
+    }
+
+    private void handleServerStartGameEvent(Message message){
+        ServerStartGameEvent serverStartGameEvent = (ServerStartGameEvent) message.getMsgDTO();
+
+        screenController.showScreen(GameScreen.screenName);
     }
 }
