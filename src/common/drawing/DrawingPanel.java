@@ -1,6 +1,7 @@
 package common.drawing;
 
 import dto.event.client.ClientDrawEvent;
+import dto.event.server.ServerDrawEvent;
 import dto.info.DrawElementInfo;
 
 import javax.swing.*;
@@ -67,7 +68,7 @@ public class DrawingPanel extends JPanel {
         this.isCurrentDrawer = (drawer == controller.getCurrentUserId());
     }
 
-    public void addRemoteDrawElement(ClientDrawEvent event) {
+    public void addRemoteDrawElement(ServerDrawEvent event) {
         drawElements.add(event.getDrawing());
         repaint();
     }

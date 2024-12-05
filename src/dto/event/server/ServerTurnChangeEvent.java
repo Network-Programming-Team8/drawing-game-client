@@ -18,4 +18,16 @@ public class ServerTurnChangeEvent extends Event {
         this.startTime = startTime;
         this.isGuessTurn = isGuessTurn;
     }
+
+    public int getNowTurn() {
+        return nowTurn;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public boolean isGuessTurn() {
+        return isGuessTurn;
+    }
 }

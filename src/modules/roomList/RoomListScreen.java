@@ -1,5 +1,6 @@
 package modules.roomList;
 
+import common.drawing.DrawingController;
 import common.screen.Screen;
 import dto.event.client.ClientCreateRoomEvent;
 import dto.event.client.ClientJoinRoomEvent;
@@ -56,6 +57,7 @@ public class RoomListScreen  extends Screen {
             ClientCreateRoomEvent clientCreateRoomEvent = getCreateRoomDTOFromTextField(createPanel, timeLimitField, participantLimitField);
             try {
                 screenController.sendToServer(new Message(CLIENT_CREATE_ROOM_EVENT, clientCreateRoomEvent));
+                DrawingController.setTimeout(clientCreateRoomEvent.getDrawTimeLimit());
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }

@@ -2,6 +2,7 @@ package modules.game;
 
 import common.drawing.DrawingController;
 import common.screen.Screen;
+import dto.event.server.ServerDrawEvent;
 import dto.event.server.ServerStartGameEvent;
 import dto.info.UserInfo;
 import modules.lobby.LobbyScreen;
@@ -14,7 +15,7 @@ import java.util.Set;
 
 public class GameScreen extends Screen {
     public static final String screenName = "GAME_SCREEN";
-    private DrawingController drawingController;
+    private static DrawingController drawingController;
 
     private static ArrayList<UserInfo> userOrder = new ArrayList<UserInfo>();
     private static UserInfo guesserInfo;
@@ -33,9 +34,20 @@ public class GameScreen extends Screen {
         });
     }
 
+    public static void updateCurrentUser(){
+        SwingUtilities.invokeLater(() -> {
+//            for(int i=0; i < userOrder.size();i++){
+//                if(userOrder.get(i).getNickname().equals(currentUser.getNickname())){
+//                    JLabel userLabel = (JLabel)userListPanel.getComponent(i);
+//                    userLabel.setBorder(BorderFactory.createLineBorder(Color.RED, 5));
+//                }
+//            }
+        });
+    }
+
     public GameScreen() {
         // DrawingController 초기화
-        this.drawingController = new DrawingController(screenController);
+        drawingController = new DrawingController(screenController);
 
         // 전체 레이아웃 설정: 3분할
         setLayout(new BorderLayout());
@@ -104,5 +116,9 @@ public class GameScreen extends Screen {
                 .orElse(null);
 
         selectedTopic = dto.getSelectedTopic();
+    }
+
+    public static void handleRemoteDrawEvent(ServerDrawEvent event){
+        drawingController.handleRemoteDrawEvent(event);
     }
 }

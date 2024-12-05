@@ -1,5 +1,6 @@
 package modules.login;
 
+import common.drawing.DrawingController;
 import common.screen.Screen;
 import dto.event.client.ClientLoginEvent;
 import message.Message;

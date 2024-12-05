@@ -1,5 +1,6 @@
 package utils;
 
+import common.drawing.DrawingController;
 import common.screen.ScreenController;
 import dto.event.server.*;
 import dto.info.RoomInfo;
@@ -63,6 +64,12 @@ public class ServerListener implements Runnable {
             case SERVER_START_GAME_EVENT:
                 handleServerStartGameEvent(message);
                 break;
+            case SERVER_TURN_CHANGE_EVENT:
+                handleServerTurnChangeEvent(message);
+                break;
+            case SERVER_DRAW_EVENT:
+                handleServerDrawEvent(message);
+                break;
 
         }
     }
@@ -70,6 +77,7 @@ public class ServerListener implements Runnable {
     private void handleServerLoginEvent(Message message){
         ServerLoginEvent serverLoginEvent = (ServerLoginEvent) message.getMsgDTO();
         screenController.setUserInfo(new UserInfo(serverLoginEvent.getId(), serverLoginEvent.getNickname(), false));
+        DrawingController.setCurrentUserId(serverLoginEvent.getId());
         screenController.showScreen(RoomListScreen.screenName);
     }
 
@@ -129,5 +137,17 @@ public class ServerListener implements Runnable {
         GameScreen.updateUserList();
 
         screenController.showScreen(GameScreen.screenName);
+    }
+
+    private void handleServerTurnChangeEvent(Message message){
+        ServerTurnChangeEvent serverTurnChangeEvent = (ServerTurnChangeEvent) message.getMsgDTO();
+
+        //TODO :
+    }
+
+    private void handleServerDrawEvent(Message message){
+        ServerDrawEvent serverDrawEvent = (ServerDrawEvent) message.getMsgDTO();
+
+        GameScreen.handleRemoteDrawEvent(serverDrawEvent);
     }
 }

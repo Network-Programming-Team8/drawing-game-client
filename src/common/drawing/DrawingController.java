@@ -1,7 +1,7 @@
 package common.drawing;
 
 import common.screen.ScreenController;
-import dto.event.client.ClientDrawEvent;
+import dto.event.server.ServerDrawEvent;
 import dto.info.DrawElementInfo;
 import message.Message;
 import message.MessageType;
@@ -13,10 +13,11 @@ import java.util.List;
 public class DrawingController {
     private DrawingPanel drawingPanel;
     private int currentDrawer;
-    private int currentUserId;
+    private static int currentUserId;
     private Color currentColor = Color.BLACK;
     private int currentThickness = 2;
     private ScreenController screenController;
+    private static int timeout;
 
     public DrawingController(ScreenController screenController) {
         this.screenController = screenController;
@@ -28,7 +29,7 @@ public class DrawingController {
         drawingPanel.setCurrentDrawer(drawer);
     }
 
-    public void handleRemoteDrawEvent(ClientDrawEvent event) {
+    public void handleRemoteDrawEvent(ServerDrawEvent event) {
         if (event.getDrawer() == currentDrawer) {
             drawingPanel.addRemoteDrawElement(event);
         }
@@ -36,18 +37,18 @@ public class DrawingController {
 
     public void sendDrawEvent(DrawElementInfo element) {
         try {
-            ClientDrawEvent event = new ClientDrawEvent(currentUserId, element);
+            ServerDrawEvent event = new ServerDrawEvent(currentUserId, element);
             screenController.sendToServer(new Message(MessageType.CLIENT_DRAW_EVENT, event));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void setCurrentUserId(int userId) {
-        this.currentUserId = userId;
+    public static void setCurrentUserId(int userId) {
+        currentUserId = userId;
     }
 
-    public int getCurrentUserId() {
+    public static int getCurrentUserId() {
         return currentUserId;
     }
 
@@ -77,5 +78,9 @@ public class DrawingController {
 
     public void setInitialDrawing(List<DrawElementInfo> elements) {
         drawingPanel.setDrawElements(elements);
+    }
+
+    public static void setTimeout(int timeoutArg) {
+        timeout = timeoutArg;
     }
 }
