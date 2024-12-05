@@ -2,13 +2,10 @@ package common.screen;
 
 import dto.info.UserInfo;
 import message.Message;
-import utils.ClientSocket;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.RoundRectangle2D;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class ScreenController extends JPanel {

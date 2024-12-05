@@ -98,6 +98,9 @@ public class ServerListener implements Runnable {
     private void handleServerRoomChatMessage(Message message){
         ServerRoomChatMessage serverRoomChatMessage = (ServerRoomChatMessage) message.getMsgDTO();
 
+        if(screenController.getUserInfo().getNickname().equals(serverRoomChatMessage.getSpeaker())){
+            return ;
+        }
         LobbyScreen.receiveChatMessage(serverRoomChatMessage.getSpeaker() + ": " + serverRoomChatMessage.getMessage());
     }
 

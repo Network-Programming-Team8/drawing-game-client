@@ -160,7 +160,7 @@ public class LobbyScreen extends Screen {
 
     // 채팅 추가 함수
     private static void addChatMessage(DefaultListModel<String> chatModel, String message) {
-        int maxMessages = 5; // 최대 채팅 기록 수
+        int maxMessages = 10; // 최대 채팅 기록 수
         if (chatModel.getSize() >= maxMessages) {
             chatModel.remove(0); // 오래된 메시지 제거
         }
