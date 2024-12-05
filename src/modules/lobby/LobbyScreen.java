@@ -27,7 +27,7 @@ public class LobbyScreen extends Screen {
     private static JList<String> chatList;
 
     public static RoomInfo roomInfo = new RoomInfo(-1, -1, -1, new ArrayList<>());
-    private boolean isReady = false;
+    private static boolean isReady = false;
 
     // NOTE: swing을 한번 constructor에서 그리고나면, 값이 변경되어도 화면이 다시 그려지지 않음. 그렇기에 invokeLater 호출 필요.
     public static void updateRoomInfoOnSwing(){
@@ -52,9 +52,7 @@ public class LobbyScreen extends Screen {
             //초기화
             for (int i = 0; i < 9; i++) {
                 JLabel targetUserArea = (JLabel) userPanel.getComponent(i);
-                targetUserArea.setText("");
-                targetUserArea.setBackground(Color.decode("#f1f8e9"));
-                targetUserArea.setBorder(BorderFactory.createLineBorder(Color.decode("#f1f8e9")));
+                targetUserArea.setVisible(false);
             }
 
             //유저 목록 update
@@ -62,11 +60,12 @@ public class LobbyScreen extends Screen {
             for (int i = 0; i < userList.size(); i++) {
                 JLabel targetUserArea = (JLabel) userPanel.getComponent(i);
                 targetUserArea.setText(userList.get(i).getNickname());
-                targetUserArea.setBackground(Color.decode("#c8e6c9"));
-                targetUserArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                targetUserArea.setVisible(true);
             }
             userPanel.revalidate();
             userPanel.repaint();
+
+            updateUserReadyStatus();
         });
     }
 
@@ -75,9 +74,32 @@ public class LobbyScreen extends Screen {
             JLabel readyStatus = (JLabel) readyPanel.getComponent(1);
             if(isReady){
                 readyStatus.setText("준비 완료");
+                updateUserReadyStatus();
                 return ;
             }
+            updateUserReadyStatus();
             readyStatus.setText("준비 해주세요");
+        });
+    }
+
+    public static void updateUserReadyStatus(){
+        SwingUtilities.invokeLater(()->{
+            java.util.List<UserInfo> userList = roomInfo.getUserInfoList();
+            System.out.println(userList.get(0).isReady());
+            for (int i = 0; i < userList.size(); i++) {
+                String path = String.format("../../resources/person%d.png",(i%3)+1);
+                if(userList.get(i).isReady()){
+                    path = String.format("../../resources/person%d_ready.png",(i%3)+1);
+                }
+
+                JLabel userLabel = (JLabel) userPanel.getComponent(i);
+
+                ImageIcon logoIcon = new ImageIcon(LobbyScreen.class.getResource(path));
+                Image logoImage = logoIcon.getImage().getScaledInstance(120, 140, Image.SCALE_SMOOTH); // 크기 조정
+
+                userLabel.setIcon(new ImageIcon(logoImage));
+                userLabel.setVisible(true);
+            }
         });
     }
 
@@ -121,8 +143,14 @@ public class LobbyScreen extends Screen {
 
         for (int i = 0; i < 9; i++) {
             JLabel userLabel = new JLabel("", SwingConstants.CENTER);
+
             userLabel.setOpaque(true);
-            userLabel.setBackground(Color.decode("#f1f8e9"));
+            userLabel.setHorizontalTextPosition(JLabel.CENTER); // 텍스트를 수평으로 가운데 정렬
+            userLabel.setVerticalTextPosition(JLabel.BOTTOM);   // 텍스트를 이미지 아래로 배치
+            userLabel.setVerticalAlignment(JLabel.TOP);         // JLabel 전체를 상단 정렬
+
+            userLabel.setBackground(Color.decode("#c8e6c9"));
+            userLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             userPanel.add(userLabel);
         }
 
@@ -245,7 +273,7 @@ public class LobbyScreen extends Screen {
     public static void showTopicInputDialog() {
         // 다이얼로그 생성
         JDialog dialog = new JDialog();
-        dialog.setTitle("TOPIC INPUT");
+        dialog.setTitle(screenController.getUserInfo().getNickname());
 
         dialog.setLayout(new BorderLayout());
         dialog.setSize(300, 200);

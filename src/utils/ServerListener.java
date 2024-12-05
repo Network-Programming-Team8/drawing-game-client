@@ -66,7 +66,7 @@ public class ServerListener implements Runnable {
 
     private void handleServerLoginEvent(Message message){
         ServerLoginEvent serverLoginEvent = (ServerLoginEvent) message.getMsgDTO();
-        screenController.setUserInfo(new UserInfo(serverLoginEvent.getId(), serverLoginEvent.getNickname(), true));
+        screenController.setUserInfo(new UserInfo(serverLoginEvent.getId(), serverLoginEvent.getNickname(), false));
         screenController.showScreen(RoomListScreen.screenName);
     }
 
