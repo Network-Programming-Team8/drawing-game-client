@@ -35,14 +35,17 @@ public class GameScreen extends Screen {
         });
     }
 
-    public static void updateCurrentUser(){
+    public static void updateCurrentUser(int nowTurnUserId){
         SwingUtilities.invokeLater(() -> {
-//            for(int i=0; i < userOrder.size();i++){
-//                if(userOrder.get(i).getNickname().equals(currentUser.getNickname())){
-//                    JLabel userLabel = (JLabel)userListPanel.getComponent(i);
-//                    userLabel.setBorder(BorderFactory.createLineBorder(Color.RED, 5));
-//                }
-//            }
+            for(int i=0; i < userOrder.size();i++){
+                if(userOrder.get(i).getId() == nowTurnUserId){
+                    JLabel userLabel = (JLabel)userListPanel.getComponent(i);
+                    userLabel.setBorder(BorderFactory.createLineBorder(Color.RED, 5));
+
+                    userListPanel.revalidate();
+                    userListPanel.repaint();
+                }
+            }
         });
     }
 
@@ -125,5 +128,6 @@ public class GameScreen extends Screen {
 
     public static void handleServerTurnChangeEvent(ServerTurnChangeEvent event){
         drawingController.handleServerTurnChangeEvent(event);
+        updateCurrentUser(event.getNowTurn());
     }
 }
