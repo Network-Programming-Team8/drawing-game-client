@@ -22,6 +22,7 @@ public class LobbyScreen extends Screen {
 
     private static JPanel roomInfoPanel;
     private static JPanel userPanel;
+    private static JPanel readyPanel;
     private static DefaultListModel<String> chatModel;
     private static JList<String> chatList;
 
@@ -69,6 +70,17 @@ public class LobbyScreen extends Screen {
         });
     }
 
+    private void updateReadyStatus(){
+        SwingUtilities.invokeLater(()->{
+            JLabel readyStatus = (JLabel) readyPanel.getComponent(1);
+            if(isReady){
+                readyStatus.setText("준비 완료");
+                return ;
+            }
+            readyStatus.setText("준비 해주세요");
+        });
+    }
+
     public LobbyScreen() {
         setSize(800, 600);
         setLayout(new GridLayout(1, 2)); // 좌우로 나뉜 레이아웃
@@ -86,7 +98,7 @@ public class LobbyScreen extends Screen {
         // 방 설정 정보
         makeRoomInfoPanel();
         // Ready 버튼
-        JPanel readyPanel = makeReadyPanel();
+        readyPanel = makeReadyPanel();
         // 설정 및 Ready 버튼 영역 추가
         settingsPanel.add(roomInfoPanel);
         settingsPanel.add(readyPanel);
@@ -197,11 +209,15 @@ public class LobbyScreen extends Screen {
         readyPanel.setLayout(new BoxLayout(readyPanel, BoxLayout.Y_AXIS));
         readyPanel.setBackground(Color.decode("#ffcdd2"));
 
+        JLabel readyStatus = new JLabel("준비 해주세요");
+        readyStatus.setOpaque(true);
+
         JButton readyButton = new JButton("Ready");
         readyButton.addActionListener(e->{
             try {
                 isReady = !isReady;
                 screenController.sendToServer(new Message(CLIENT_READY_EVENT, new ClientReadyEvent(isReady)));
+                updateReadyStatus();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
@@ -218,6 +234,7 @@ public class LobbyScreen extends Screen {
         });
 
         readyPanel.add(Box.createVerticalGlue()); // 위쪽 여백
+        readyPanel.add(readyStatus);
         readyPanel.add(readyButton);
         readyPanel.add(exitButton);
         readyPanel.add(Box.createVerticalGlue()); // 아래쪽 여백
