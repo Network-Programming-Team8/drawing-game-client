@@ -39,14 +39,14 @@ public class GameScreen extends Screen {
     public static void updateCurrentUser(int nowTurnUserId){
         SwingUtilities.invokeLater(() -> {
             for(int i=0; i < userOrder.size();i++){
+                JLabel userLabel = (JLabel)userListPanel.getComponent(i);
+                userLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 if(userOrder.get(i).getId() == nowTurnUserId){
-                    JLabel userLabel = (JLabel)userListPanel.getComponent(i);
                     userLabel.setBorder(BorderFactory.createLineBorder(Color.RED, 5));
-
-                    userListPanel.revalidate();
-                    userListPanel.repaint();
                 }
             }
+            userListPanel.revalidate();
+            userListPanel.repaint();
         });
     }
 

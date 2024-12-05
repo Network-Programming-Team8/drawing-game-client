@@ -128,7 +128,6 @@ public class ServerListener implements Runnable {
         ServerRequestTopicEvent serverRequestTopicEvent = (ServerRequestTopicEvent) message.getMsgDTO();
 
         LobbyScreen.showTopicInputDialog(frame);
-        screenController.showScreen(GameScreen.screenName);
     }
 
     private void handleServerErrorEvent(Message message){
