@@ -2,16 +2,36 @@ package modules.game;
 
 import common.drawing.DrawingController;
 import common.screen.Screen;
-import dto.event.client.ClientDrawEvent;
-import dto.info.DrawElementInfo;
+import dto.event.server.ServerStartGameEvent;
+import dto.info.UserInfo;
+import modules.lobby.LobbyScreen;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class GameScreen extends Screen {
     public static final String screenName = "GAME_SCREEN";
     private DrawingController drawingController;
+
+    private static ArrayList<UserInfo> userOrder = new ArrayList<UserInfo>();
+    private static UserInfo guesserInfo;
+    private static String selectedTopic;
+
+    private static JPanel userListPanel;
+
+    public static void updateUserList(){
+        SwingUtilities.invokeLater(() -> {
+            for(int i=0; i < userOrder.size();i++){
+                JLabel userLabel = (JLabel)userListPanel.getComponent(i);
+                userLabel.setText(userOrder.get(i).getNickname());
+                userLabel.setFont(new Font("Arial", Font.BOLD, 20));
+                userLabel.setVisible(true);
+            }
+        });
+    }
 
     public GameScreen() {
         // DrawingController 초기화
@@ -21,18 +41,18 @@ public class GameScreen extends Screen {
         setLayout(new BorderLayout());
 
         // 1. 왼쪽: 현재 유저 리스트 패널
-        JPanel userListPanel = new JPanel();
-        userListPanel.setLayout(new BoxLayout(userListPanel, BoxLayout.Y_AXIS));
+        userListPanel = new JPanel(new GridLayout(9,1, 10,10 ));
         userListPanel.setBorder(BorderFactory.createTitledBorder("현재 유저들"));
-        userListPanel.setPreferredSize(new Dimension(200, 0));
+        userListPanel.setPreferredSize(new Dimension(150, 0));
         userListPanel.setBackground(Color.decode("#e8f5e9"));
 
-        // 더미 데이터로 초기 유저 리스트 추가 (나중에 서버에서 동적 업데이트 가능)
-        for (int i = 0; i < 10; i++) {
-            JLabel userLabel = new JLabel("User " + (i + 1), SwingConstants.LEFT);
+        // 더미 데이터로 초기 유저 리스트 추가
+        for (int i = 0; i < 9; i++) {
+            JLabel userLabel = new JLabel("", SwingConstants.CENTER);
             userLabel.setOpaque(true);
             userLabel.setBackground(Color.decode("#c8e6c9"));
             userLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            userLabel.setVisible(false);
             userListPanel.add(userLabel);
         }
 
@@ -66,18 +86,23 @@ public class GameScreen extends Screen {
         setVisible(true);
     }
 
-    // 서버로부터 현재 그리는 사람 정보를 받았을 때
-    public void setCurrentDrawer(int drawerId) {
-        drawingController.setCurrentDrawer(drawerId);
-    }
+    public static void setGameInfoFromDTO(ServerStartGameEvent dto){
+        Set<UserInfo> userInfos = new HashSet<>(LobbyScreen.roomInfo.getUserInfoList());
 
-    // 서버로부터 이전 그림 데이터를 받았을 때
-    public void setInitialDrawing(List<DrawElementInfo> elements) {
-        drawingController.setInitialDrawing(elements);
-    }
+        for(Integer userId : dto.getOrderList()){
+            UserInfo matchedUserInfo = userInfos.stream()
+                    .filter(userInfo -> userInfo.getId() == userId)
+                    .findFirst()
+                    .orElse(null);
 
-    // 서버로부터 그리기 이벤트를 받았을 때
-    public void handleDrawEvent(ClientDrawEvent event) {
-        drawingController.handleRemoteDrawEvent(event);
+            userOrder.add(matchedUserInfo);
+        }
+
+        guesserInfo = userInfos.stream()
+                .filter(userInfo -> userInfo.getId() == dto.getSelectedUser())
+                .findFirst()
+                .orElse(null);
+
+        selectedTopic = dto.getSelectedTopic();
     }
 }

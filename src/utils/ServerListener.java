@@ -125,6 +125,9 @@ public class ServerListener implements Runnable {
     private void handleServerStartGameEvent(Message message){
         ServerStartGameEvent serverStartGameEvent = (ServerStartGameEvent) message.getMsgDTO();
 
+        GameScreen.setGameInfoFromDTO(serverStartGameEvent);
+        GameScreen.updateUserList();
+
         screenController.showScreen(GameScreen.screenName);
     }
 }

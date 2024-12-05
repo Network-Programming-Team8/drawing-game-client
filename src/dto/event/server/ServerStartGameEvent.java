@@ -18,4 +18,17 @@ public class ServerStartGameEvent extends Event {
         this.selectedUser = selectedUser;
         this.orderList = orderList;
     }
+
+    public List<Integer> getOrderList() {
+        return orderList;
+    }
+
+    public String getSelectedTopic() {
+        return selectedTopic;
+    }
+
+    public int getSelectedUser() {
+        return selectedUser;
+    }
 }
+
