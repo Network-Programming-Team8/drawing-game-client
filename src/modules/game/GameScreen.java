@@ -54,7 +54,11 @@ public class GameScreen extends Screen {
         SwingUtilities.invokeLater(() -> {
             JPanel topicPanel = (JPanel)infoPanel.getComponent(0);
             JLabel topicLabel = (JLabel)topicPanel.getComponent(0);
-            topicLabel.setText(String.format("그리기 주제 : %s", selectedTopic));
+            String topic=String.format("그리기 주제 : %s", selectedTopic);
+            if(guesserInfo.getId() == DrawingController.getCurrentUserId()){
+                topic = String.format("당신은 맞히는 사람입니다.");
+            }
+            topicLabel.setText(String.format(topic));
             JPanel userPanel = (JPanel)infoPanel.getComponent(2);
             JLabel userLabel = (JLabel)userPanel.getComponent(0);
             userLabel.setText(String.format("맞히는 사람 : %s", guesserInfo.getNickname()));
