@@ -51,6 +51,13 @@ public class GameScreen extends Screen {
         });
     }
 
+    public static void startTimeLabel(){
+        SwingUtilities.invokeLater(() -> {
+            JLabel timeLabel = (JLabel)drawingPanel.getComponent(0);
+            startCountdown(timeLabel, DrawingController.timeout);
+        });
+    }
+
     public static void updateRoomInfoPanel(){
         SwingUtilities.invokeLater(() -> {
             JPanel topicPanel = (JPanel)infoPanel.getComponent(0);
@@ -144,24 +151,45 @@ public class GameScreen extends Screen {
         infoPanel.add(drawerPanel);
     }
 
-    private void makeDrawingPanel(){
+    private void makeDrawingPanel() {
+        // 전체 패널
         drawingPanel = new JPanel();
-        drawingPanel.setLayout(new OverlayLayout(drawingPanel)); // OverlayLayout 설정
+        drawingPanel.setLayout(new BorderLayout()); // BorderLayout 설정
         drawingPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        // Drawing 영역 (기본 Panel)
+        // Drawing 영역 (정사각형 Panel)
         JPanel drawingArea = drawingController.getDrawingPanel();
+        drawingArea.setPreferredSize(new Dimension(300, 300)); // 정사각형 크기 설정
         drawingArea.setBackground(Color.WHITE); // 기본 배경
-        drawingPanel.add(drawingArea);
+        drawingArea.setBorder(BorderFactory.createLineBorder(Color.GRAY)); // 경계선 추가
 
         // JLabel 추가
         JLabel label = new JLabel("Sample Text", SwingConstants.CENTER);
         label.setForeground(Color.RED); // 텍스트 색상 설정
         label.setFont(new Font("Arial", Font.BOLD, 20));
-        label.setAlignmentX(0.5f); // 중앙 정렬
-        label.setAlignmentY(0.5f);
+        label.setHorizontalAlignment(SwingConstants.CENTER); // 중앙 정렬
+        label.setVerticalAlignment(SwingConstants.TOP); // 상단에 위치
 
-        drawingPanel.add(label);
+        // BorderLayout으로 구성
+        drawingPanel.add(label, BorderLayout.NORTH); // 상단에 Label 추가
+        drawingPanel.add(drawingArea, BorderLayout.CENTER); // 중앙에 Drawing Area 추가
+    }
+
+    // 남은 시간 카운트다운
+    private static void startCountdown(JLabel label, int initialTime) {
+        Timer timer = new Timer(1000, null); // 1초 간격 타이머 생성
+        final int[] timeLeft = {initialTime}; // 남은 시간 저장
+
+        timer.addActionListener(e -> {
+            timeLeft[0]--; // 1초 감소
+            if (timeLeft[0] >= 0) {
+                label.setText("Time left: " + timeLeft[0]); // 텍스트 갱신
+            } else {
+                timer.stop(); // 시간이 끝나면 타이머 중지
+                label.setText("Time is up!"); // 종료 메시지 표시
+            }
+        });
+        timer.start(); // 타이머 시작
     }
 
     public static void setGameInfoFromDTO(ServerStartGameEvent dto){

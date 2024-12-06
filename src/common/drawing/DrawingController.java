@@ -7,6 +7,7 @@ import dto.event.server.ServerTurnChangeEvent;
 import dto.info.DrawElementInfo;
 import message.Message;
 import message.MessageType;
+import modules.game.GameScreen;
 
 import java.awt.*;
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class DrawingController {
     private Color currentColor = Color.BLACK;
     private int currentThickness = 2;
     private ScreenController screenController;
-    private static int timeout;
+    public static int timeout;
     private LocalDateTime startTime;
 
     public DrawingController(ScreenController screenController) {
@@ -55,13 +56,14 @@ public class DrawingController {
 
     public void handleServerTurnChangeEvent(ServerTurnChangeEvent serverTurnChangeEvent){
         if(serverTurnChangeEvent.isGuessTurn()){
-
+            //TODO 맞히는 사람 차례일 시 동작 구현
             return ;
         }
         if(serverTurnChangeEvent.getNowTurn() == currentUserId) {
             this.currentDrawer = serverTurnChangeEvent.getNowTurn();
             this.startTime = serverTurnChangeEvent.getStartTime();
             drawingPanel.setCurrentDrawer(this.currentDrawer);
+            GameScreen.startTimeLabel();
         }
     }
 
