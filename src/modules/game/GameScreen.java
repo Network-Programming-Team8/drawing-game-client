@@ -234,6 +234,9 @@ public class GameScreen extends Screen {
     }
 
     public static void showGuessInputDialog(JFrame parentFrame) {
+        //이전에 그렸던 그림 로드
+        drawingController.rePaintPanel();
+
         // 모달 다이얼로그 생성
         JDialog dialog = new JDialog(parentFrame, true); // 모달 설정
         dialog.setTitle("그림 그리기 주제 입력 다이얼로그");
@@ -290,8 +293,6 @@ public class GameScreen extends Screen {
     }
 
     public static void showGuessResultDialog(JFrame parentFrame, String topic, String guesser_answer, Map<Integer, java.util.List<DrawElementInfo>> drawingMap) {
-        drawingController.rePaintPanel();
-
         // 모달 다이얼로그 생성
         JDialog dialog = new JDialog(parentFrame, true); // 모달 설정
         dialog.setTitle("맞히기 결과");
