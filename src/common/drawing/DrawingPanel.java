@@ -82,6 +82,15 @@ public class DrawingPanel extends JPanel {
         drawElements.add(info);
     }
 
+    public void addDrawElementAndRepaint(DrawElementInfo info) {
+        drawElements.add(info);
+        repaint();
+    }
+
+    public void rePaint(){
+        repaint();
+    }
+
     public void clearDrawing() {
         drawElements.clear();
         repaint();

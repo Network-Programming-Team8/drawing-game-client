@@ -290,6 +290,8 @@ public class GameScreen extends Screen {
     }
 
     public static void showGuessResultDialog(JFrame parentFrame, String topic, String guesser_answer, Map<Integer, java.util.List<DrawElementInfo>> drawingMap) {
+        drawingController.rePaintPanel();
+
         // 모달 다이얼로그 생성
         JDialog dialog = new JDialog(parentFrame, true); // 모달 설정
         dialog.setTitle("맞히기 결과");

@@ -27,6 +27,7 @@ public class DrawingController {
     private ScreenController screenController;
     public static int timeout;
     private LocalDateTime startTime;
+    private boolean isDone = false;
 
     public DrawingController(ScreenController screenController) {
         this.screenController = screenController;
@@ -39,9 +40,11 @@ public class DrawingController {
     }
 
     public void handleRemoteDrawEvent(ServerDrawEvent event) {
-        if (event.getDrawer() == currentDrawer) {
+        if (isDone) {
             drawingPanel.addRemoteDrawElement(event);
+            return ;
         }
+        drawingPanel.addDrawElement(event.getDrawing());
     }
 
     public void sendDrawEvent(DrawElementInfo element) {
@@ -49,6 +52,7 @@ public class DrawingController {
             LocalDateTime submittedTime = LocalDateTime.now();
             if(this.startTime.plusSeconds(timeout).isBefore(submittedTime)){
                 drawingPanel.setIsCurrentDrawer(false);
+                isDone = true;
                 return ;
             }
             ClientDrawEvent event = new ClientDrawEvent(currentUserId, element, submittedTime);
@@ -121,11 +125,15 @@ public class DrawingController {
         final int[] index = {0};
         scheduler.scheduleAtFixedRate(() -> {
             if (index[0] < elements.size()) {
-                drawingPanel.addDrawElement(elements.get(index[0]));
+                drawingPanel.addDrawElementAndRepaint(elements.get(index[0]));
                 index[0]++;
             } else {
                 scheduler.shutdown();
             }
         }, 0, 10, TimeUnit.MILLISECONDS);
+    }
+
+    public void rePaintPanel(){
+        drawingPanel.repaint();
     }
 }
