@@ -1,7 +1,6 @@
 package utils;
 
 import common.drawing.DrawingController;
-import common.drawing.DrawingPanel;
 import common.screen.ScreenController;
 import dto.event.server.*;
 import dto.info.RoomInfo;

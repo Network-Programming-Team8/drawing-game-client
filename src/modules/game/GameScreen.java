@@ -10,8 +10,6 @@ import dto.info.DrawElementInfo;
 import dto.info.UserInfo;
 import message.Message;
 import modules.lobby.LobbyScreen;
-import modules.login.LoginScreen;
-import modules.mvp.MVPScreen;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,13 +1,11 @@
 package common.drawing;
 
-import dto.event.client.ClientDrawEvent;
 import dto.event.server.ServerDrawEvent;
 import dto.info.DrawElementInfo;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
