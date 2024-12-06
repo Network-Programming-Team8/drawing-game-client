@@ -55,10 +55,6 @@ public class DrawingController {
     }
 
     public void handleServerTurnChangeEvent(ServerTurnChangeEvent serverTurnChangeEvent){
-        if(serverTurnChangeEvent.isGuessTurn()){
-            //TODO 맞히는 사람 차례일 시 동작 구현
-            return ;
-        }
         if(serverTurnChangeEvent.getNowTurn() == currentUserId) {
             this.currentDrawer = serverTurnChangeEvent.getNowTurn();
             this.startTime = serverTurnChangeEvent.getStartTime();

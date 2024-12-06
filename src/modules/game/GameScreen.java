@@ -2,17 +2,24 @@ package modules.game;
 
 import common.drawing.DrawingController;
 import common.screen.Screen;
+import dto.event.client.ClientGuessEvent;
+import dto.event.client.ClientSuggestTopicEvent;
 import dto.event.server.ServerDrawEvent;
 import dto.event.server.ServerStartGameEvent;
 import dto.event.server.ServerTurnChangeEvent;
 import dto.info.UserInfo;
+import message.Message;
 import modules.lobby.LobbyScreen;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+
+import static message.MessageType.CLIENT_GUESS_EVENT;
+import static message.MessageType.CLIENT_SUGGEST_TOPIC_EVENT;
 
 public class GameScreen extends Screen {
     public static final String screenName = "GAME_SCREEN";
@@ -220,4 +227,65 @@ public class GameScreen extends Screen {
         drawingController.handleServerTurnChangeEvent(event);
         updateCurrentUser(event.getNowTurn());
     }
+
+    public static int getGuesserId(){
+        return guesserInfo.getId();
+    }
+
+    public static void showGuessInputDialog(JFrame parentFrame) {
+        // 모달 다이얼로그 생성
+        JDialog dialog = new JDialog(parentFrame, true); // 모달 설정
+        dialog.setTitle(screenController.getUserInfo().getNickname());
+        dialog.setLayout(new BorderLayout());
+        dialog.setSize(300, 200);
+
+        // 입력 필드 및 레이블
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JLabel instructionLabel = new JLabel("예측한 그림 주제를 입력해주세요!");
+        instructionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        instructionLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        inputPanel.add(instructionLabel);
+
+        JTextField inputField = new JTextField(15);
+        inputField.setMaximumSize(new Dimension(200, 30));
+        inputField.setAlignmentX(Component.CENTER_ALIGNMENT);
+        inputField.setFont(new Font("Arial", Font.PLAIN, 12));
+        inputPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        inputPanel.add(inputField);
+
+        dialog.add(inputPanel, BorderLayout.CENTER);
+
+        // 버튼
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton confirmButton = new JButton("제출");
+
+        confirmButton.addActionListener(e -> {
+            String inputValue = inputField.getText().trim();
+            if (!inputValue.isEmpty()) {
+                try {
+                    System.out.println("Input Value: " + inputValue);
+                    screenController.sendToServer(new Message(CLIENT_GUESS_EVENT, new ClientGuessEvent(inputValue)));
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(dialog, "Error sending input to server: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                dialog.dispose(); // 다이얼로그 닫기
+            } else {
+                JOptionPane.showMessageDialog(dialog, "Please enter a value.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        buttonPanel.add(confirmButton);
+
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+        // 다이얼로그 위치 설정
+        dialog.setLocationRelativeTo(parentFrame);
+
+        // 다이얼로그 표시
+        dialog.setVisible(true);
+    }
+
 }

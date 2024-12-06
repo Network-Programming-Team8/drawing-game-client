@@ -147,6 +147,10 @@ public class ServerListener implements Runnable {
 
     private void handleServerTurnChangeEvent(Message message){
         ServerTurnChangeEvent serverTurnChangeEvent = (ServerTurnChangeEvent) message.getMsgDTO();
+        if(serverTurnChangeEvent.isGuessTurn() && DrawingController.getCurrentUserId() == serverTurnChangeEvent.getNowTurn()){
+            GameScreen.showGuessInputDialog(frame);
+            return;
+        }
         GameScreen.handleServerTurnChangeEvent(serverTurnChangeEvent);
     }
 
@@ -155,4 +159,5 @@ public class ServerListener implements Runnable {
 
         GameScreen.handleRemoteDrawEvent(serverDrawEvent);
     }
+
 }
