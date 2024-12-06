@@ -18,4 +18,16 @@ public class ServerFinishGameEvent extends Event {
         this.submittedAnswer = submittedAnswer;
         this.drawingMap = drawingMap;
     }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public String getSubmittedAnswer() {
+        return submittedAnswer;
+    }
+
+    public Map<Integer, List<DrawElementInfo>> getDrawingMap() {
+        return drawingMap;
+    }
 }

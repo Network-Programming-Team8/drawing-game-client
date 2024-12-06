@@ -7,6 +7,7 @@ import dto.event.client.ClientSuggestTopicEvent;
 import dto.event.server.ServerDrawEvent;
 import dto.event.server.ServerStartGameEvent;
 import dto.event.server.ServerTurnChangeEvent;
+import dto.info.DrawElementInfo;
 import dto.info.UserInfo;
 import message.Message;
 import modules.lobby.LobbyScreen;
@@ -16,10 +17,10 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import static message.MessageType.CLIENT_GUESS_EVENT;
-import static message.MessageType.CLIENT_SUGGEST_TOPIC_EVENT;
 
 public class GameScreen extends Screen {
     public static final String screenName = "GAME_SCREEN";
@@ -235,7 +236,7 @@ public class GameScreen extends Screen {
     public static void showGuessInputDialog(JFrame parentFrame) {
         // 모달 다이얼로그 생성
         JDialog dialog = new JDialog(parentFrame, true); // 모달 설정
-        dialog.setTitle(screenController.getUserInfo().getNickname());
+        dialog.setTitle("그림 그리기 주제 입력 다이얼로그");
         dialog.setLayout(new BorderLayout());
         dialog.setSize(300, 200);
 
@@ -280,6 +281,59 @@ public class GameScreen extends Screen {
         buttonPanel.add(confirmButton);
 
         dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+        // 다이얼로그 위치 설정
+        dialog.setLocationRelativeTo(parentFrame);
+
+        // 다이얼로그 표시
+        dialog.setVisible(true);
+    }
+
+    public static void showGuessResultDialog(JFrame parentFrame, String topic, String guesser_answer, Map<Integer, java.util.List<DrawElementInfo>> drawingMap) {
+        // 모달 다이얼로그 생성
+        JDialog dialog = new JDialog(parentFrame, true); // 모달 설정
+        dialog.setTitle("맞히기 결과");
+        dialog.setLayout(new BorderLayout());
+        dialog.setSize(300, 200);
+
+        // 입력 필드 및 레이블
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JLabel guesserAnswer = new JLabel(String.format("참가자가 예측한 게임 주제 : %s", guesser_answer));
+        guesserAnswer.setAlignmentX(Component.CENTER_ALIGNMENT);
+        guesserAnswer.setFont(new Font("Arial", Font.BOLD, 14));
+        inputPanel.add(guesserAnswer);
+
+        JLabel selectedTopic = new JLabel(String.format("실제 그리기 주제 : %s", topic));
+        selectedTopic.setAlignmentX(Component.CENTER_ALIGNMENT);
+        selectedTopic.setFont(new Font("Arial", Font.BOLD, 14));
+        inputPanel.add(selectedTopic);
+
+        String guess_result = (topic.equals(guesser_answer)) ? "맞혔습니다!" : "틀렸습니다..ㅜㅜ";
+        Color resultColor = (topic.equals(guesser_answer)) ? Color.BLUE : Color.RED;
+
+        JLabel guess_resultLabel = new JLabel(guess_result);
+        guess_resultLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        guess_resultLabel.setForeground(resultColor);
+        guess_resultLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        inputPanel.add(guess_resultLabel);
+
+        // 버튼
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton confirmButton = new JButton("그리기 과정 돌아보기");
+
+        confirmButton.addActionListener(e -> {
+            dialog.dispose();
+            drawingController.printDrawingMap(drawingMap);
+        });
+
+        buttonPanel.add(confirmButton);
+
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+        dialog.add(inputPanel, BorderLayout.CENTER);
 
         // 다이얼로그 위치 설정
         dialog.setLocationRelativeTo(parentFrame);

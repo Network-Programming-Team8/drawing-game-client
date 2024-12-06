@@ -13,6 +13,10 @@ import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class DrawingController {
     private DrawingPanel drawingPanel;
@@ -102,5 +106,26 @@ public class DrawingController {
 
     public static void setTimeout(int timeoutArg) {
         timeout = timeoutArg;
+    }
+
+    public void printDrawingMap(Map<Integer, List<DrawElementInfo>> drawingMap) {
+        drawingPanel.clearDrawing();
+
+        //drawingMap에 있는 DrawElement를 0.01초 간격으로 화면에 print 하는 로직
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        List<DrawElementInfo> elements = drawingMap.values().stream()
+                .flatMap(List::stream)
+                .toList();
+
+        final int[] index = {0};
+        scheduler.scheduleAtFixedRate(() -> {
+            if (index[0] < elements.size()) {
+                drawingPanel.addDrawElement(elements.get(index[0]));
+                index[0]++;
+            } else {
+                scheduler.shutdown();
+            }
+        }, 0, 10, TimeUnit.MILLISECONDS);
     }
 }

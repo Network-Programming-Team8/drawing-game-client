@@ -71,7 +71,9 @@ public class ServerListener implements Runnable {
             case SERVER_DRAW_EVENT:
                 handleServerDrawEvent(message);
                 break;
-
+            case SERVER_FINISH_GAME_EVENT:
+                handleServerFinishGameEvent(message);
+                break;
         }
     }
 
@@ -158,6 +160,12 @@ public class ServerListener implements Runnable {
         ServerDrawEvent serverDrawEvent = (ServerDrawEvent) message.getMsgDTO();
 
         GameScreen.handleRemoteDrawEvent(serverDrawEvent);
+    }
+
+    private void handleServerFinishGameEvent(Message message){
+        ServerFinishGameEvent serverFinishGameEvent = (ServerFinishGameEvent) message.getMsgDTO();
+
+        GameScreen.showGuessResultDialog(frame, serverFinishGameEvent.getAnswer(), serverFinishGameEvent.getSubmittedAnswer(), serverFinishGameEvent.getDrawingMap());
     }
 
 }
