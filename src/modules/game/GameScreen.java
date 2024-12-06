@@ -24,6 +24,7 @@ public class GameScreen extends Screen {
 
     private static JPanel userListPanel;
     private static JPanel infoPanel;
+    private static JPanel drawingPanel;
 
     public static void updateUserList(){
         SwingUtilities.invokeLater(() -> {
@@ -82,8 +83,7 @@ public class GameScreen extends Screen {
         makeInfoPanel();
 
         // 3. 가운데: Drawing 패널
-        JPanel drawingPanel = drawingController.getDrawingPanel();
-        drawingPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        makeDrawingPanel();
 
         // 패널 추가
         add(userListPanel, BorderLayout.WEST);
@@ -142,6 +142,26 @@ public class GameScreen extends Screen {
         infoPanel.add(topicPanel);
         infoPanel.add(Box.createRigidArea(new Dimension(0, 10))); // 패널 간 간격
         infoPanel.add(drawerPanel);
+    }
+
+    private void makeDrawingPanel(){
+        drawingPanel = new JPanel();
+        drawingPanel.setLayout(new OverlayLayout(drawingPanel)); // OverlayLayout 설정
+        drawingPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+        // Drawing 영역 (기본 Panel)
+        JPanel drawingArea = drawingController.getDrawingPanel();
+        drawingArea.setBackground(Color.WHITE); // 기본 배경
+        drawingPanel.add(drawingArea);
+
+        // JLabel 추가
+        JLabel label = new JLabel("Sample Text", SwingConstants.CENTER);
+        label.setForeground(Color.RED); // 텍스트 색상 설정
+        label.setFont(new Font("Arial", Font.BOLD, 20));
+        label.setAlignmentX(0.5f); // 중앙 정렬
+        label.setAlignmentY(0.5f);
+
+        drawingPanel.add(label);
     }
 
     public static void setGameInfoFromDTO(ServerStartGameEvent dto){

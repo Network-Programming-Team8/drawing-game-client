@@ -42,7 +42,7 @@ public class DrawingController {
     public void sendDrawEvent(DrawElementInfo element) {
         try {
             LocalDateTime submittedTime = LocalDateTime.now();
-            if(this.startTime.plusSeconds(timeout).isAfter(submittedTime)){
+            if(this.startTime.plusSeconds(timeout).isBefore(submittedTime)){
                 drawingPanel.setIsCurrentDrawer(false);
                 return ;
             }
@@ -54,9 +54,15 @@ public class DrawingController {
     }
 
     public void handleServerTurnChangeEvent(ServerTurnChangeEvent serverTurnChangeEvent){
-        this.currentDrawer = serverTurnChangeEvent.getNowTurn();
-        this.startTime = serverTurnChangeEvent.getStartTime();
-        drawingPanel.setCurrentDrawer(this.currentDrawer);
+        if(serverTurnChangeEvent.isGuessTurn()){
+
+            return ;
+        }
+        if(serverTurnChangeEvent.getNowTurn() == currentUserId) {
+            this.currentDrawer = serverTurnChangeEvent.getNowTurn();
+            this.startTime = serverTurnChangeEvent.getStartTime();
+            drawingPanel.setCurrentDrawer(this.currentDrawer);
+        }
     }
 
     public static void setCurrentUserId(int userId) {
