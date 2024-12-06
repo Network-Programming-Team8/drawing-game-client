@@ -64,6 +64,7 @@ public class DrawingController {
 
     public void handleServerTurnChangeEvent(ServerTurnChangeEvent serverTurnChangeEvent){
         if(serverTurnChangeEvent.getNowTurn() == currentUserId) {
+            drawingPanel.rePaint();
             this.currentDrawer = serverTurnChangeEvent.getNowTurn();
             this.startTime = serverTurnChangeEvent.getStartTime();
             drawingPanel.setCurrentDrawer(this.currentDrawer);
