@@ -154,7 +154,6 @@ public class DrawingController {
                 // 더 이상 처리할 엔트리가 없으면 종료
                 scheduler.shutdown();
                 screenController.showScreen(MVPScreen.screenName);
-                MVPScreen.showVoteDialog();
             }
         }, 0, 10, TimeUnit.MILLISECONDS);
     }

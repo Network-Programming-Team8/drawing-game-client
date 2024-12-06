@@ -10,6 +10,7 @@ import dto.info.DrawElementInfo;
 import dto.info.UserInfo;
 import message.Message;
 import modules.lobby.LobbyScreen;
+import modules.login.LoginScreen;
 import modules.mvp.MVPScreen;
 
 import javax.swing.*;
@@ -240,7 +241,7 @@ public class GameScreen extends Screen {
 
         // 모달 다이얼로그 생성
         JDialog dialog = new JDialog(parentFrame, true); // 모달 설정
-        dialog.setTitle("그림 그리기 주제 입력 다이얼로그");
+        dialog.setTitle(screenController.getUserInfo().getNickname());
         dialog.setLayout(new BorderLayout());
         dialog.setSize(300, 200);
 
@@ -296,7 +297,7 @@ public class GameScreen extends Screen {
     public static void showGuessResultDialog(JFrame parentFrame, String topic, String guesser_answer, Map<Integer, java.util.List<DrawElementInfo>> drawingMap) {
         // 모달 다이얼로그 생성
         JDialog dialog = new JDialog(parentFrame, true); // 모달 설정
-        dialog.setTitle("맞히기 결과");
+        dialog.setTitle(screenController.getUserInfo().getNickname());
         dialog.setLayout(new BorderLayout());
         dialog.setSize(300, 200);
 
