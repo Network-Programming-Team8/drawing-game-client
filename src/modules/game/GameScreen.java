@@ -3,7 +3,6 @@ package modules.game;
 import common.drawing.DrawingController;
 import common.screen.Screen;
 import dto.event.client.ClientGuessEvent;
-import dto.event.client.ClientSuggestTopicEvent;
 import dto.event.server.ServerDrawEvent;
 import dto.event.server.ServerStartGameEvent;
 import dto.event.server.ServerTurnChangeEvent;
@@ -190,6 +189,7 @@ public class GameScreen extends Screen {
 
         timer.addActionListener(e -> {
             timeLeft[0]--; // 1초 감소
+            System.out.println(timeLeft[0]);
             if (timeLeft[0] >= 0) {
                 label.setText("Time left: " + timeLeft[0]); // 텍스트 갱신
             } else {

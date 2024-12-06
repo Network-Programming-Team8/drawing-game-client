@@ -105,6 +105,7 @@ public class ServerListener implements Runnable {
         ServerRoomUpdateEvent serverRoomUpdateEvent = (ServerRoomUpdateEvent) message.getMsgDTO();
 
         LobbyScreen.roomInfo.fromRoomInfo(serverRoomUpdateEvent.getRoomInfo());
+        DrawingController.setTimeout(serverRoomUpdateEvent.getRoomInfo().getDrawTimeLimit());
 
         LobbyScreen.updateRoomInfoOnSwing();
         LobbyScreen.updateUserFieldOnSwing();
