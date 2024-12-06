@@ -25,7 +25,7 @@ public class GameScreen extends Screen {
     public static final String screenName = "GAME_SCREEN";
     private static DrawingController drawingController;
 
-    private static ArrayList<UserInfo> userOrder = new ArrayList<UserInfo>();
+    public static ArrayList<UserInfo> userOrder = new ArrayList<UserInfo>();
     private static UserInfo guesserInfo = new UserInfo(1, "", false);
     private static String selectedTopic;
 

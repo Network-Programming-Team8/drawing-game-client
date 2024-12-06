@@ -12,6 +12,8 @@ import modules.game.GameScreen;
 import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -116,19 +118,39 @@ public class DrawingController {
     public void printDrawingMap(Map<Integer, List<DrawElementInfo>> drawingMap) {
         drawingPanel.clearDrawing();
 
-        //drawingMap에 있는 DrawElement를 0.01초 간격으로 화면에 print 하는 로직
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-        List<DrawElementInfo> elements = drawingMap.values().stream()
-                .flatMap(List::stream)
+        // drawingMap의 Entry들을 orderList에 따라 정렬
+        List<Map.Entry<Integer, List<DrawElementInfo>>> sortedEntries = drawingMap.entrySet().stream()
+                .sorted(Comparator.comparingInt(entry -> GameScreen.userOrder.indexOf(entry.getKey())))
                 .toList();
 
-        final int[] index = {0};
+        // 정렬된 Entry의 value들을 순차적으로 출력
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        Iterator<Map.Entry<Integer, List<DrawElementInfo>>> entryIterator = sortedEntries.iterator();
+
+        // 상태를 저장할 객체
+        final Map.Entry<Integer, List<DrawElementInfo>>[] currentEntry = new Map.Entry[]{null};
+        final int[] currentIndex = {0};
+
         scheduler.scheduleAtFixedRate(() -> {
-            if (index[0] < elements.size()) {
-                drawingPanel.addDrawElementAndRepaint(elements.get(index[0]));
-                index[0]++;
+            if (currentEntry[0] == null && entryIterator.hasNext()) {
+                currentEntry[0] = entryIterator.next();
+                currentIndex[0] = 0; // 새 엔트리의 value 리스트 시작
+            }
+
+            if (currentEntry[0] != null) {
+                GameScreen.updateCurrentUser(currentEntry[0].getKey());
+                List<DrawElementInfo> valueList = currentEntry[0].getValue();
+                if (currentIndex[0] < valueList.size()) {
+                    // value 리스트의 요소를 순차적으로 추가
+                    drawingPanel.addDrawElementAndRepaint(valueList.get(currentIndex[0]));
+                    currentIndex[0]++;
+                } else {
+                    // 현재 엔트리의 value 리스트를 다 처리했으면 다음 엔트리로 넘어감
+                    currentEntry[0] = null;
+                }
             } else {
+                // 더 이상 처리할 엔트리가 없으면 종료
                 scheduler.shutdown();
             }
         }, 0, 10, TimeUnit.MILLISECONDS);
