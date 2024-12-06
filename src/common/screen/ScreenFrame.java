@@ -51,7 +51,7 @@ public class ScreenFrame extends JFrame {
         screenController.addScreen(new RoomListScreen(), RoomListScreen.screenName);
         screenController.addScreen(new LobbyScreen(), LobbyScreen.screenName);
         screenController.addScreen(new GameScreen(), GameScreen.screenName);
-        screenController.addScreen(new MVPScreen(this), MVPScreen.screenName);
+        screenController.addScreen(new MVPScreen(), MVPScreen.screenName);
 
         add(screenController);
 
