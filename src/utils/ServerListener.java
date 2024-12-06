@@ -152,6 +152,7 @@ public class ServerListener implements Runnable {
     private void handleServerTurnChangeEvent(Message message){
         ServerTurnChangeEvent serverTurnChangeEvent = (ServerTurnChangeEvent) message.getMsgDTO();
         if(serverTurnChangeEvent.isGuessTurn() && DrawingController.getCurrentUserId() == serverTurnChangeEvent.getNowTurn()){
+            GameScreen.updateCurrentUser(serverTurnChangeEvent.getNowTurn());
             GameScreen.showGuessInputDialog(frame);
             return;
         }
