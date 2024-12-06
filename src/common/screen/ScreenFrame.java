@@ -3,6 +3,7 @@ package common.screen;
 import modules.game.GameScreen;
 import modules.lobby.LobbyScreen;
 import modules.login.LoginScreen;
+import modules.mvp.MVPScreen;
 import modules.roomList.RoomListScreen;
 import utils.ClientSocket;
 import utils.ServerListener;
@@ -50,6 +51,7 @@ public class ScreenFrame extends JFrame {
         screenController.addScreen(new RoomListScreen(), RoomListScreen.screenName);
         screenController.addScreen(new LobbyScreen(), LobbyScreen.screenName);
         screenController.addScreen(new GameScreen(), GameScreen.screenName);
+        screenController.addScreen(new MVPScreen(this), MVPScreen.screenName);
 
         add(screenController);
 
