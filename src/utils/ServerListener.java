@@ -8,6 +8,7 @@ import dto.info.UserInfo;
 import message.Message;
 import modules.game.GameScreen;
 import modules.lobby.LobbyScreen;
+import modules.mvp.MVPScreen;
 import modules.roomList.RoomListScreen;
 
 import javax.swing.*;
@@ -73,6 +74,9 @@ public class ServerListener implements Runnable {
                 break;
             case SERVER_FINISH_GAME_EVENT:
                 handleServerFinishGameEvent(message);
+                break;
+            case SERVER_FINISH_VOTE_EVENT:
+                handleServerFinishVoteEvent(message);
                 break;
         }
     }
@@ -170,4 +174,11 @@ public class ServerListener implements Runnable {
         GameScreen.showGuessResultDialog(frame, serverFinishGameEvent.getAnswer(), serverFinishGameEvent.getSubmittedAnswer(), serverFinishGameEvent.getDrawingMap());
     }
 
+    private void handleServerFinishVoteEvent(Message message) {
+        ServerFinishVoteEvent serverFinishVoteEvent = (ServerFinishVoteEvent) message.getMsgDTO();
+        SwingUtilities.invokeLater(() -> {
+            System.out.println("Server Finish Vote Event");
+            MVPScreen.showVoteResult(serverFinishVoteEvent.getVoteInfo());
+        });
+    }
 }

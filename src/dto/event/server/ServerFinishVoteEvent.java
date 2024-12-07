@@ -14,4 +14,9 @@ public class ServerFinishVoteEvent extends Event {
     public ServerFinishVoteEvent(VoteInfo voteInfo) {
         this.voteInfo = voteInfo;
     }
+
+
+    public VoteInfo getVoteInfo() {
+        return voteInfo;
+    }
 }

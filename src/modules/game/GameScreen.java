@@ -10,6 +10,7 @@ import dto.info.DrawElementInfo;
 import dto.info.UserInfo;
 import message.Message;
 import modules.lobby.LobbyScreen;
+import modules.mvp.MVPScreen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -345,4 +346,10 @@ public class GameScreen extends Screen {
         dialog.setVisible(true);
     }
 
+    public static void transitionToMVPScreen() {
+        SwingUtilities.invokeLater(() -> {
+            MVPScreen.updateUserList(userOrder);
+            screenController.showScreen(MVPScreen.screenName);
+        });
+    }
 }

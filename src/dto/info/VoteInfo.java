@@ -12,4 +12,8 @@ public class VoteInfo implements Info{
     public VoteInfo(Map<Integer, Integer> numberOfVote){
         this.numberOfVote = numberOfVote;
     }
+
+    public Map<Integer, Integer> getVoteResults(){
+        return numberOfVote;
+    }
 }
