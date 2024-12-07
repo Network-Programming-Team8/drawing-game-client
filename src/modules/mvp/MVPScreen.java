@@ -36,7 +36,7 @@ public class MVPScreen extends Screen {
         resultLabel.setHorizontalAlignment(JLabel.CENTER);
         add(resultLabel, BorderLayout.SOUTH);
 
-        timerLabel = new JLabel("투표 시간: 30초");
+        timerLabel = new JLabel("아직 참여자들이 그리기 과정을 보고있어요!");
         timerLabel.setFont(new Font("Arial", Font.BOLD, 16));
         timerLabel.setHorizontalAlignment(JLabel.CENTER);
         add(timerLabel, BorderLayout.NORTH);
@@ -75,7 +75,9 @@ public class MVPScreen extends Screen {
                 JButton voteButton = new JButton("투표");
                 voteButton.setAlignmentX(Component.CENTER_ALIGNMENT);
                 voteButton.addActionListener(e -> {
-                    if (!hasVoted && voteTimer.isRunning()) {
+                    if(voteTimer == null || !voteTimer.isRunning()){
+                        screenController.showToast("아직 투표할 수 없어요!");
+                    } else if (!hasVoted) {
                         try {
                             screenController.sendToServer(new Message(MessageType.CLIENT_VOTE_EVENT, new ClientVoteEvent(user.getId())));
                             hasVoted = true;
