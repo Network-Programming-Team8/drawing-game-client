@@ -13,12 +13,14 @@ public class RoomInfo extends Event {
     private int drawTimeLimit;
     private int participantLimit;
     private List<UserInfo> userInfoList;
+    private int ownerId;
 
-    public RoomInfo(int id, int drawTimeLimit, int participantLimit, List<UserInfo> userInfoList) {
+    public RoomInfo(int id, int drawTimeLimit, int participantLimit, List<UserInfo> userInfoList, int ownerId) {
         this.id = id;
         this.drawTimeLimit = drawTimeLimit;
         this.participantLimit = participantLimit;
         this.userInfoList = userInfoList;
+        this.ownerId = ownerId;
     }
 
     public void setId(int id) {
@@ -37,9 +39,11 @@ public class RoomInfo extends Event {
         this.userInfoList = userInfoList;
     }
 
+    public void setOwnerId(int ownerId) {this.ownerId = ownerId;}
     public int getId() {
         return this.id;
     }
+    public int getOwnerId() { return this.ownerId; }
 
     public int getDrawTimeLimit() {
         return this.drawTimeLimit;
@@ -58,5 +62,6 @@ public class RoomInfo extends Event {
         setDrawTimeLimit(roomInfo.getDrawTimeLimit());
         setUserInfoList(roomInfo.getUserInfoList());
         setParticipantLimit(roomInfo.getParticipantLimit());
+        setOwnerId(roomInfo.getOwnerId());
     }
 }

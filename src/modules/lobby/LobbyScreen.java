@@ -24,8 +24,61 @@ public class LobbyScreen extends Screen {
     private static DefaultListModel<String> chatModel;
     private static JList<String> chatList;
 
-    public static RoomInfo roomInfo = new RoomInfo(-1, -1, -1, new ArrayList<>());
+    public static RoomInfo roomInfo = new RoomInfo(-1, -1, -1, new ArrayList<>(), -1);
     private static boolean isReady = false;
+
+    private static JButton changeRoomSettingButton;
+
+    private void makeRoomInfoPanel() {
+        roomInfoPanel = new JPanel();
+        roomInfoPanel.setLayout(new BoxLayout(roomInfoPanel, BoxLayout.Y_AXIS));
+        roomInfoPanel.setBorder(BorderFactory.createTitledBorder("방 설정 정보"));
+        roomInfoPanel.setBackground(Color.decode("#fff9c4"));
+
+        changeRoomSettingButton = new JButton("방 정보 변경");
+        changeRoomSettingButton.addActionListener(e -> showChangeRoomSettingDialog());
+        roomInfoPanel.add(changeRoomSettingButton);
+
+        updateRoomInfoOnSwing();
+    }
+
+    private void showChangeRoomSettingDialog() {
+        JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "방 정보 변경", true);
+        dialog.setLayout(new GridLayout(3, 2));
+
+        JTextField drawTimeLimitField = new JTextField(String.valueOf(roomInfo.getDrawTimeLimit()));
+        JTextField participantLimitField = new JTextField(String.valueOf(roomInfo.getParticipantLimit()));
+
+        dialog.add(new JLabel("그리기 시간 제한:"));
+        dialog.add(drawTimeLimitField);
+        dialog.add(new JLabel("참여자 수 제한:"));
+        dialog.add(participantLimitField);
+
+        JButton confirmButton = new JButton("확인");
+        confirmButton.addActionListener(e -> {
+            try {
+                int drawTimeLimit = Integer.parseInt(drawTimeLimitField.getText());
+                int participantLimit = Integer.parseInt(participantLimitField.getText());
+                ClientChangeRoomSettingEvent event = new ClientChangeRoomSettingEvent(drawTimeLimit, participantLimit);
+                screenController.sendToServer(new Message(CLIENT_CHANGE_ROOM_SETTING_EVENT, event));
+                dialog.dispose();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(dialog, "올바른 숫자를 입력해주세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(dialog, "서버 통신 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        JButton cancelButton = new JButton("취소");
+        cancelButton.addActionListener(e -> dialog.dispose());
+
+        dialog.add(confirmButton);
+        dialog.add(cancelButton);
+
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }
 
     // NOTE: swing을 한번 constructor에서 그리고나면, 값이 변경되어도 화면이 다시 그려지지 않음. 그렇기에 invokeLater 호출 필요.
     public static void updateRoomInfoOnSwing(){
@@ -39,8 +92,12 @@ public class LobbyScreen extends Screen {
                 roomInfoPanel.add(roomIdLabel);
                 roomInfoPanel.add(setting1);
                 roomInfoPanel.add(setting2);
+                roomInfoPanel.add(changeRoomSettingButton);
                 roomInfoPanel.revalidate();
                 roomInfoPanel.repaint();
+                System.out.println(roomInfo.getOwnerId());
+                boolean isOwner = roomInfo.getOwnerId() == screenController.getUserInfo().getId();
+                changeRoomSettingButton.setEnabled(isOwner);
             }
         });
     }
@@ -221,14 +278,6 @@ public class LobbyScreen extends Screen {
         SwingUtilities.invokeLater(() -> addChatMessage(chatModel, serverMessage));
     }
 
-    private void makeRoomInfoPanel(){
-        roomInfoPanel = new JPanel();
-        roomInfoPanel.setLayout(new BoxLayout(roomInfoPanel, BoxLayout.Y_AXIS));
-        roomInfoPanel.setBorder(BorderFactory.createTitledBorder("방 설정 정보"));
-        roomInfoPanel.setBackground(Color.decode("#fff9c4"));
-
-        updateRoomInfoOnSwing(); // 초기 정보 설정
-    }
 
     private JPanel makeReadyPanel(){
         JPanel readyPanel = new JPanel();
@@ -326,7 +375,7 @@ public class LobbyScreen extends Screen {
     }
 
     public static void resetState() {
-        roomInfo = new RoomInfo(-1, -1, -1, new ArrayList<>());
+        roomInfo = new RoomInfo(-1, -1, -1, new ArrayList<>(), -1);
         isReady = false;
 
         SwingUtilities.invokeLater(() -> {

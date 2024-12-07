@@ -103,7 +103,9 @@ public class ServerListener implements Runnable {
                 serverCreateRoomEvent.getId(),
                 serverCreateRoomEvent.getDrawTimeLimit(),
                 serverCreateRoomEvent.getParticipantLimit(),
-                Arrays.asList(screenController.getUserInfo())
+                Arrays.asList(screenController.getUserInfo()),
+                serverCreateRoomEvent.getOwnerId()
+
         );
         LobbyScreen.roomInfo.fromRoomInfo(roomInfo);
 
@@ -192,9 +194,6 @@ public class ServerListener implements Runnable {
 
     private void handleServerVoteEvent(Message message) {
         ServerVoteEvent serverVoteEvent = (ServerVoteEvent) message.getMsgDTO();
-        for (Map.Entry<Integer, Integer> entry : serverVoteEvent.getVoteInfo().getVoteResults().entrySet()) {
-            System.out.println(String.format("[SERVER_VOTE_EVENT] USER_ID: %d, COUNT: %d", entry.getKey(), entry.getValue()));
-        }
 
         SwingUtilities.invokeLater(() -> {
             MVPScreen.updateVotes(serverVoteEvent.getVoteInfo());
