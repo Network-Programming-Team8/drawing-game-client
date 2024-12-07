@@ -59,7 +59,8 @@ public class LobbyScreen extends Screen {
             java.util.List<UserInfo> userList = roomInfo.getUserInfoList();
             for (int i = 0; i < userList.size(); i++) {
                 JLabel targetUserArea = (JLabel) userPanel.getComponent(i);
-                targetUserArea.setText(userList.get(i).getNickname());
+                UserInfo user = userList.get(i);
+                targetUserArea.setText(String.format("<html>[ID]: %d<br>[Nickname]: %s</html>", user.getId(), user.getNickname()));
                 targetUserArea.setVisible(true);
             }
             userPanel.revalidate();
