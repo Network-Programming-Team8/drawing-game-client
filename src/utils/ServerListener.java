@@ -17,6 +17,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Arrays;
+import java.util.Map;
 
 public class ServerListener implements Runnable {
 
@@ -191,6 +192,10 @@ public class ServerListener implements Runnable {
 
     private void handleServerVoteEvent(Message message) {
         ServerVoteEvent serverVoteEvent = (ServerVoteEvent) message.getMsgDTO();
+        for (Map.Entry<Integer, Integer> entry : serverVoteEvent.getVoteInfo().getVoteResults().entrySet()) {
+            System.out.println(String.format("[SERVER_VOTE_EVENT] USER_ID: %d, COUNT: %d", entry.getKey(), entry.getValue()));
+        }
+
         SwingUtilities.invokeLater(() -> {
             MVPScreen.updateVotes(serverVoteEvent.getVoteInfo());
         });

@@ -100,7 +100,6 @@ public class MVPScreen extends Screen {
             for (Map.Entry<Integer, Integer> entry : voteInfo.getVoteResults().entrySet()) {
                 int userId = entry.getKey();
                 int voteCount = entry.getValue();
-                System.out.println(String.format("UserId: %d, voteCount: %d", userId, voteCount));
                 JLabel voteLabel = voteLabels.get(userId);
                 if (voteLabel != null) {
                     voteLabel.setText("투표 수: " + voteCount);
