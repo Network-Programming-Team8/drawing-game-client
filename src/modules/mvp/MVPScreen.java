@@ -11,13 +11,20 @@ import modules.lobby.LobbyScreen;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MVPScreen extends Screen {
     public static final String screenName = "MVP_SCREEN";
     private static JPanel userPanel;
     private static JLabel resultLabel;
     private static boolean hasVoted = false;
+    private static Timer voteTimer;
+    private static JLabel timerLabel;
+
+    private static Map<Integer, JLabel> voteLabels = new HashMap<>();
 
     public MVPScreen() {
         setLayout(new BorderLayout());
@@ -28,10 +35,11 @@ public class MVPScreen extends Screen {
         resultLabel.setHorizontalAlignment(JLabel.CENTER);
         add(resultLabel, BorderLayout.SOUTH);
 
-        for(UserInfo user: LobbyScreen.roomInfo.getUserInfoList()){
-            System.out.println("user...!");
-            System.out.println(user.getId());
-        }
+        timerLabel = new JLabel("투표 시간: 30초");
+        timerLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        timerLabel.setHorizontalAlignment(JLabel.CENTER);
+        add(timerLabel, BorderLayout.NORTH);
+
     }
 
     private void makeUserPanel() {
@@ -45,7 +53,6 @@ public class MVPScreen extends Screen {
     }
 
     public static void updateUserList(List<UserInfo> users) {
-        System.out.println("Updating user list. Users count: " + users.size());
         SwingUtilities.invokeLater(() -> {
             userPanel.removeAll();
             for (UserInfo user : users) {
@@ -59,10 +66,15 @@ public class MVPScreen extends Screen {
                 userLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
                 userVotePanel.add(userLabel);
 
+                JLabel voteLabel = new JLabel("투표 수: 0");
+                voteLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                userVotePanel.add(voteLabel);
+                voteLabels.put(user.getId(), voteLabel);
+
                 JButton voteButton = new JButton("투표");
                 voteButton.setAlignmentX(Component.CENTER_ALIGNMENT);
                 voteButton.addActionListener(e -> {
-                    if (!hasVoted) {
+                    if (!hasVoted && voteTimer.isRunning()) {
                         try {
                             screenController.sendToServer(new Message(MessageType.CLIENT_VOTE_EVENT, new ClientVoteEvent(user.getId())));
                             hasVoted = true;
@@ -83,6 +95,21 @@ public class MVPScreen extends Screen {
         });
     }
 
+    public static void updateVotes(VoteInfo voteInfo) {
+        SwingUtilities.invokeLater(() -> {
+            for (Map.Entry<Integer, Integer> entry : voteInfo.getVoteResults().entrySet()) {
+                int userId = entry.getKey();
+                int voteCount = entry.getValue();
+                System.out.println(String.format("UserId: %d, voteCount: %d", userId, voteCount));
+                JLabel voteLabel = voteLabels.get(userId);
+                if (voteLabel != null) {
+                    voteLabel.setText("투표 수: " + voteCount);
+                }
+            }
+        });
+    }
+
+
     private static void disableAllVoteButtons() {
         for (Component component : userPanel.getComponents()) {
             if (component instanceof JPanel) {
@@ -94,6 +121,24 @@ public class MVPScreen extends Screen {
                 }
             }
         }
+    }
+
+    public static void startVoteTimer(LocalDateTime endTime) {
+        if (voteTimer != null) {
+            voteTimer.stop();
+        }
+
+        voteTimer = new Timer(1000, e -> {
+            long remainingSeconds = java.time.Duration.between(LocalDateTime.now(), endTime).getSeconds();
+            if (remainingSeconds > 0) {
+                timerLabel.setText("투표 시간: " + remainingSeconds + "초");
+            } else {
+                timerLabel.setText("투표 종료");
+                voteTimer.stop();
+                disableAllVoteButtons();
+            }
+        });
+        voteTimer.start();
     }
 
     public static void showVoteResult(VoteInfo voteInfo) {

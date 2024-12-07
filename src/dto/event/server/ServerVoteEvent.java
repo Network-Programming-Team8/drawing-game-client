@@ -14,4 +14,8 @@ public class ServerVoteEvent extends Event {
     public ServerVoteEvent(VoteInfo voteInfo) {
         this.voteInfo = voteInfo;
     }
+
+    public VoteInfo getVoteInfo() {
+        return voteInfo;
+    }
 }

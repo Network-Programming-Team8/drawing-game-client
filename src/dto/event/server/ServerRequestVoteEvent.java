@@ -14,4 +14,8 @@ public class ServerRequestVoteEvent extends Event {
     public ServerRequestVoteEvent(LocalDateTime endTime) {
         this.endTime = LocalDateTime.now().plusSeconds(30);
     }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
 }

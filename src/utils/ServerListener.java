@@ -5,6 +5,7 @@ import common.screen.ScreenController;
 import dto.event.server.*;
 import dto.info.RoomInfo;
 import dto.info.UserInfo;
+import dto.info.VoteInfo;
 import message.Message;
 import modules.game.GameScreen;
 import modules.lobby.LobbyScreen;
@@ -77,6 +78,12 @@ public class ServerListener implements Runnable {
                 break;
             case SERVER_FINISH_VOTE_EVENT:
                 handleServerFinishVoteEvent(message);
+                break;
+            case SERVER_VOTE_EVENT:
+                handleServerVoteEvent(message);
+                break;
+            case SERVER_REQUEST_VOTE_EVENT:
+                handleServerRequestVoteEvent(message);
                 break;
         }
     }
@@ -179,6 +186,21 @@ public class ServerListener implements Runnable {
         SwingUtilities.invokeLater(() -> {
             System.out.println("Server Finish Vote Event");
             MVPScreen.showVoteResult(serverFinishVoteEvent.getVoteInfo());
+        });
+    }
+
+    private void handleServerVoteEvent(Message message) {
+        ServerVoteEvent serverVoteEvent = (ServerVoteEvent) message.getMsgDTO();
+        SwingUtilities.invokeLater(() -> {
+            MVPScreen.updateVotes(serverVoteEvent.getVoteInfo());
+        });
+    }
+
+    private void handleServerRequestVoteEvent(Message message) {
+        ServerRequestVoteEvent event = (ServerRequestVoteEvent) message.getMsgDTO();
+
+        SwingUtilities.invokeLater(() -> {
+            MVPScreen.startVoteTimer(event.getEndTime());
         });
     }
 }
