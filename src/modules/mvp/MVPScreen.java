@@ -1,6 +1,8 @@
 package modules.mvp;
 
+import common.drawing.DrawingController;
 import common.screen.Screen;
+import dto.event.client.ClientExitRoomEvent;
 import dto.event.client.ClientVoteEvent;
 import dto.event.client.ClientVoteReadyEvent;
 import dto.info.UserInfo;
@@ -23,7 +25,6 @@ public class MVPScreen extends Screen {
     public static final String screenName = "MVP_SCREEN";
     private static JPanel userPanel;
     private static JLabel resultLabel;
-    private static boolean hasVoted = false;
     private static Timer voteTimer;
     private static JLabel timerLabel;
 
@@ -48,7 +49,9 @@ public class MVPScreen extends Screen {
         returnToLobbyButton.setEnabled(false);
         returnToLobbyButton.addActionListener(e -> {
             try {
-                screenController.sendToServer(new Message(MessageType.CLIENT_EXIT_ROOM_EVENT, null));
+                screenController.sendToServer(new Message(MessageType.CLIENT_EXIT_ROOM_EVENT, new ClientExitRoomEvent()));
+                resetGameState(); // 게임 상태 초기화
+                LobbyScreen.resetState(); // LobbyScreen 상태 초기화
                 screenController.showScreen(RoomListScreen.screenName);
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -93,11 +96,9 @@ public class MVPScreen extends Screen {
                 voteButton.addActionListener(e -> {
                     if(voteTimer == null || !voteTimer.isRunning()){
                         screenController.showToast("아직 투표할 수 없어요!");
-                    } else if (!hasVoted) {
+                    } else {
                         try {
                             screenController.sendToServer(new Message(MessageType.CLIENT_VOTE_EVENT, new ClientVoteEvent(user.getId())));
-                            hasVoted = true;
-                            disableAllVoteButtons();
                             screenController.showToast("투표가 완료되었습니다.");
                         } catch (IOException ex) {
                             ex.printStackTrace();
@@ -181,5 +182,28 @@ public class MVPScreen extends Screen {
             if(user.getId() == userId) return user;
         }
         return null;
+    }
+
+    public static void resetGameState() {
+        if (voteTimer != null) {
+            voteTimer.stop();
+        }
+        voteTimer = null;
+        voteLabels.clear();
+
+        // 다른 클래스의 static 변수 초기화
+        GameScreen.resetGameState();
+        LobbyScreen.resetState();
+        DrawingController.resetState();
+
+        // Swing 컴포넌트 초기화
+        SwingUtilities.invokeLater(() -> {
+            userPanel.removeAll();
+            resultLabel.setText("투표 결과를 기다리는 중...");
+            timerLabel.setText("아직 참여자들이 그리기 과정을 보고있어요!");
+            returnToLobbyButton.setEnabled(false);
+            userPanel.revalidate();
+            userPanel.repaint();
+        });
     }
 }

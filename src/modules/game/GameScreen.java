@@ -358,4 +358,23 @@ public class GameScreen extends Screen {
             screenController.showScreen(MVPScreen.screenName);
         });
     }
+
+    public static void resetGameState() {
+        userOrder.clear();
+        guesserInfo = new UserInfo(1, "", false);
+        selectedTopic = null;
+
+        SwingUtilities.invokeLater(() -> {
+            userListPanel.removeAll();
+            infoPanel.removeAll();
+            drawingPanel.removeAll();
+            statusLabel.setText("아직 참여자가 주제 발의 중입니다");
+            userListPanel.revalidate();
+            userListPanel.repaint();
+            infoPanel.revalidate();
+            infoPanel.repaint();
+            drawingPanel.revalidate();
+            drawingPanel.repaint();
+        });
+    }
 }

@@ -68,16 +68,15 @@ public class LobbyScreen extends Screen {
         });
     }
 
-    private void updateReadyStatus(){
-        SwingUtilities.invokeLater(()->{
+    public static void updateReadyStatus() {
+        SwingUtilities.invokeLater(() -> {
             JLabel readyStatus = (JLabel) readyPanel.getComponent(1);
-            if(isReady){
+            if (isReady) {
                 readyStatus.setText("준비 완료");
-                updateUserReadyStatus();
-                return ;
+            } else {
+                readyStatus.setText("준비 해주세요");
             }
             updateUserReadyStatus();
-            readyStatus.setText("준비 해주세요");
         });
     }
 
@@ -324,5 +323,16 @@ public class LobbyScreen extends Screen {
 
         // 다이얼로그 표시
         dialog.setVisible(true);
+    }
+
+    public static void resetState() {
+        roomInfo = new RoomInfo(-1, -1, -1, new ArrayList<>());
+        isReady = false;
+
+        SwingUtilities.invokeLater(() -> {
+            updateRoomInfoOnSwing();
+            updateUserFieldOnSwing();
+            updateReadyStatus();
+        });
     }
 }

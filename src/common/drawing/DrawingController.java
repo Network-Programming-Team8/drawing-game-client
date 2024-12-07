@@ -10,6 +10,7 @@ import message.MessageType;
 import modules.game.GameScreen;
 import modules.mvp.MVPScreen;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -22,7 +23,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class DrawingController {
-    private DrawingPanel drawingPanel;
+    private static DrawingPanel drawingPanel;
     private int currentDrawer;
     private static int currentUserId;
     private Color currentColor = Color.BLACK;
@@ -167,5 +168,17 @@ public class DrawingController {
 
     public void rePaintPanel(){
         drawingPanel.repaint();
+    }
+
+    public static void resetState() {
+        timeout = 0;
+        currentUserId = 0;
+
+        SwingUtilities.invokeLater(() -> {
+            if (drawingPanel != null) {
+                drawingPanel.clearDrawing();
+                drawingPanel.repaint();
+            }
+        });
     }
 }
