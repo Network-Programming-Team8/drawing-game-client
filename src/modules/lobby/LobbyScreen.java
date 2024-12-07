@@ -304,7 +304,6 @@ public class LobbyScreen extends Screen {
                 try {
                     System.out.println("Input Value: " + inputValue);
                     screenController.sendToServer(new Message(CLIENT_SUGGEST_TOPIC_EVENT, new ClientSuggestTopicEvent(inputValue)));
-                    JOptionPane.showMessageDialog(dialog, "Input sent successfully.");
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(dialog, "Error sending input to server: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }

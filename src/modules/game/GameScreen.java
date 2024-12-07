@@ -61,12 +61,14 @@ public class GameScreen extends Screen {
         });
     }
 
-    public static void startTimeLabel(){
+    public static void startTimeLabel(int remainingSeconds){
         SwingUtilities.invokeLater(() -> {
             JLabel timeLabel = (JLabel)drawingPanel.getComponent(0);
-            startCountdown(timeLabel, DrawingController.timeout);
+            startCountdown(timeLabel, remainingSeconds);
         });
     }
+
+
 
     public static void updateRoomInfoPanel(){
         SwingUtilities.invokeLater(() -> {
@@ -186,21 +188,19 @@ public class GameScreen extends Screen {
     }
 
     // 남은 시간 카운트다운
-    private static void startCountdown(JLabel label, int initialTime) {
-        Timer timer = new Timer(1000, null); // 1초 간격 타이머 생성
-        final int[] timeLeft = {initialTime}; // 남은 시간 저장
-
+    private static void startCountdown(JLabel label, int remainingSeconds) {
+        Timer timer = new Timer(1000, null);
+        final int[] timeLeft = {remainingSeconds};
         timer.addActionListener(e -> {
-            timeLeft[0]--; // 1초 감소
-            System.out.println(timeLeft[0]);
+            timeLeft[0]--;
             if (timeLeft[0] >= 0) {
-                label.setText("Time left: " + timeLeft[0]); // 텍스트 갱신
+                label.setText("Time left: " + timeLeft[0]);
             } else {
-                timer.stop(); // 시간이 끝나면 타이머 중지
-                label.setText("Time is up!"); // 종료 메시지 표시
+                timer.stop();
+                label.setText("Time is up!");
             }
         });
-        timer.start(); // 타이머 시작
+        timer.start();
     }
 
     public static void setGameInfoFromDTO(ServerStartGameEvent dto){

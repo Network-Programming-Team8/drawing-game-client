@@ -71,7 +71,10 @@ public class DrawingController {
             this.currentDrawer = serverTurnChangeEvent.getNowTurn();
             this.startTime = serverTurnChangeEvent.getStartTime();
             drawingPanel.setCurrentDrawer(this.currentDrawer);
-            GameScreen.startTimeLabel();
+
+            // 남은 시간 계산
+            long remainingSeconds = java.time.Duration.between(LocalDateTime.now(), this.startTime.plusSeconds(timeout)).getSeconds();
+            GameScreen.startTimeLabel(Math.max(0, (int)remainingSeconds));
         }
     }
 
