@@ -35,6 +35,13 @@ public class GameScreen extends Screen {
     private static JPanel userListPanel;
     private static JPanel infoPanel;
     private static JPanel drawingPanel;
+    private static JLabel statusLabel;
+
+    public static void updateStatusLabelGameStart() {
+        SwingUtilities.invokeLater(() -> {
+            statusLabel.setText("게임 시작!");
+        });
+    }
 
     public static void updateUserList(){
         SwingUtilities.invokeLater(() -> {
@@ -164,27 +171,23 @@ public class GameScreen extends Screen {
     }
 
     private void makeDrawingPanel() {
-        // 전체 패널
         drawingPanel = new JPanel();
-        drawingPanel.setLayout(new BorderLayout()); // BorderLayout 설정
+        drawingPanel.setLayout(new BorderLayout());
         drawingPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        // Drawing 영역 (정사각형 Panel)
         JPanel drawingArea = drawingController.getDrawingPanel();
-        drawingArea.setPreferredSize(new Dimension(300, 300)); // 정사각형 크기 설정
-        drawingArea.setBackground(Color.WHITE); // 기본 배경
-        drawingArea.setBorder(BorderFactory.createLineBorder(Color.GRAY)); // 경계선 추가
+        drawingArea.setPreferredSize(new Dimension(300, 300));
+        drawingArea.setBackground(Color.WHITE);
+        drawingArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
-        // JLabel 추가
-        JLabel label = new JLabel("Sample Text", SwingConstants.CENTER);
-        label.setForeground(Color.RED); // 텍스트 색상 설정
-        label.setFont(new Font("Arial", Font.BOLD, 20));
-        label.setHorizontalAlignment(SwingConstants.CENTER); // 중앙 정렬
-        label.setVerticalAlignment(SwingConstants.TOP); // 상단에 위치
+        statusLabel = new JLabel("아직 참여자가 주제 발의 중입니다", SwingConstants.CENTER);
+        statusLabel.setForeground(Color.RED);
+        statusLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        statusLabel.setVerticalAlignment(SwingConstants.TOP);
 
-        // BorderLayout으로 구성
-        drawingPanel.add(label, BorderLayout.NORTH); // 상단에 Label 추가
-        drawingPanel.add(drawingArea, BorderLayout.CENTER); // 중앙에 Drawing Area 추가
+        drawingPanel.add(statusLabel, BorderLayout.NORTH);
+        drawingPanel.add(drawingArea, BorderLayout.CENTER);
     }
 
     // 남은 시간 카운트다운

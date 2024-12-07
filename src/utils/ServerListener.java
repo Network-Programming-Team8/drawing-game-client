@@ -157,7 +157,7 @@ public class ServerListener implements Runnable {
         GameScreen.updateUserList();
         GameScreen.updateRoomInfoPanel();
 
-        screenController.showScreen(GameScreen.screenName);
+        GameScreen.updateStatusLabelGameStart();
     }
 
     private void handleServerTurnChangeEvent(Message message){

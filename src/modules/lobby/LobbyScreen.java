@@ -5,6 +5,7 @@ import dto.event.client.*;
 import dto.info.RoomInfo;
 import dto.info.UserInfo;
 import message.Message;
+import modules.game.GameScreen;
 import modules.roomList.RoomListScreen;
 
 import javax.swing.*;
@@ -304,6 +305,7 @@ public class LobbyScreen extends Screen {
                 try {
                     System.out.println("Input Value: " + inputValue);
                     screenController.sendToServer(new Message(CLIENT_SUGGEST_TOPIC_EVENT, new ClientSuggestTopicEvent(inputValue)));
+                    screenController.showScreen(GameScreen.screenName);
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(dialog, "Error sending input to server: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
