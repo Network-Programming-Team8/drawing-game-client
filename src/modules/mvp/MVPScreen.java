@@ -2,6 +2,7 @@ package modules.mvp;
 
 import common.screen.Screen;
 import dto.event.client.ClientVoteEvent;
+import dto.event.client.ClientVoteReadyEvent;
 import dto.info.UserInfo;
 import dto.info.VoteInfo;
 import message.Message;
@@ -26,7 +27,7 @@ public class MVPScreen extends Screen {
 
     private static Map<Integer, JLabel> voteLabels = new HashMap<>();
 
-    public MVPScreen() {
+    public MVPScreen() throws IOException {
         setLayout(new BorderLayout());
 
         makeUserPanel();

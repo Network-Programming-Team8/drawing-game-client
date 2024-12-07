@@ -1,10 +1,7 @@
 package modules.lobby;
 
 import common.screen.Screen;
-import dto.event.client.ClientExitRoomEvent;
-import dto.event.client.ClientReadyEvent;
-import dto.event.client.ClientRoomChatMessage;
-import dto.event.client.ClientSuggestTopicEvent;
+import dto.event.client.*;
 import dto.info.RoomInfo;
 import dto.info.UserInfo;
 import message.Message;
@@ -245,7 +242,7 @@ public class LobbyScreen extends Screen {
         readyButton.addActionListener(e->{
             try {
                 isReady = !isReady;
-                screenController.sendToServer(new Message(CLIENT_READY_EVENT, new ClientReadyEvent(isReady)));
+                screenController.sendToServer(new Message(CLIENT_GAME_READY_EVENT, new ClientGameReadyEvent(isReady)));
                 updateReadyStatus();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);

@@ -153,7 +153,11 @@ public class DrawingController {
             } else {
                 // 더 이상 처리할 엔트리가 없으면 종료
                 scheduler.shutdown();
-                GameScreen.transitionToMVPScreen();
+                try {
+                    GameScreen.transitionToMVPScreen();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }, 0, 10, TimeUnit.MILLISECONDS);
     }

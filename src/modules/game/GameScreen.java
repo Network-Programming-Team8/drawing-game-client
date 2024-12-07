@@ -3,12 +3,14 @@ package modules.game;
 import common.drawing.DrawingController;
 import common.screen.Screen;
 import dto.event.client.ClientGuessEvent;
+import dto.event.client.ClientVoteReadyEvent;
 import dto.event.server.ServerDrawEvent;
 import dto.event.server.ServerStartGameEvent;
 import dto.event.server.ServerTurnChangeEvent;
 import dto.info.DrawElementInfo;
 import dto.info.UserInfo;
 import message.Message;
+import message.MessageType;
 import modules.lobby.LobbyScreen;
 import modules.mvp.MVPScreen;
 
@@ -346,7 +348,8 @@ public class GameScreen extends Screen {
         dialog.setVisible(true);
     }
 
-    public static void transitionToMVPScreen() {
+    public static void transitionToMVPScreen() throws IOException{
+        screenController.sendToServer(new Message(MessageType.CLIENT_VOTE_READY_EVENT, new ClientVoteReadyEvent(true)));
         SwingUtilities.invokeLater(() -> {
             MVPScreen.updateUserList(userOrder);
             screenController.showScreen(MVPScreen.screenName);
