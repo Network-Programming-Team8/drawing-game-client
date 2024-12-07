@@ -150,7 +150,7 @@ public class GameScreen extends Screen {
         topicPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // 패딩 설정
         topicPanel.setMaximumSize(new Dimension(200, 80)); // 고정 크기 설정
         topicPanel.setPreferredSize(new Dimension(200, 80)); // 원하는 크기 설정
-        JLabel topicLabel = new JLabel(String.format("그리기 주제: %s", selectedTopic), SwingConstants.CENTER);
+        JLabel topicLabel = new JLabel("주제를 선정하는 중입니다.", SwingConstants.CENTER);
         topicLabel.setFont(new Font("Arial", Font.BOLD, 16));
         topicPanel.add(topicLabel, BorderLayout.CENTER);
 
@@ -160,7 +160,7 @@ public class GameScreen extends Screen {
         drawerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // 패딩 설정
         drawerPanel.setMaximumSize(new Dimension(200, 80)); // 고정 크기 설정
         drawerPanel.setPreferredSize(new Dimension(200, 80)); // 원하는 크기 설정
-        JLabel drawerLabel = new JLabel(String.format("맞히는 사람: %s", guesserInfo.getNickname()), SwingConstants.CENTER);
+        JLabel drawerLabel = new JLabel("맞히는 사람을 정하는 중입니다.", SwingConstants.CENTER);
         drawerLabel.setFont(new Font("Arial", Font.BOLD, 16));
         drawerPanel.add(drawerLabel, BorderLayout.CENTER);
 

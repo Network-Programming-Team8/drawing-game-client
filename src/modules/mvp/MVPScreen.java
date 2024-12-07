@@ -7,7 +7,9 @@ import dto.info.UserInfo;
 import dto.info.VoteInfo;
 import message.Message;
 import message.MessageType;
+import modules.game.GameScreen;
 import modules.lobby.LobbyScreen;
+import modules.roomList.RoomListScreen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +28,7 @@ public class MVPScreen extends Screen {
     private static JLabel timerLabel;
 
     private static Map<Integer, JLabel> voteLabels = new HashMap<>();
+    private static JButton returnToLobbyButton;
 
     public MVPScreen() throws IOException {
         setLayout(new BorderLayout());
@@ -40,6 +43,19 @@ public class MVPScreen extends Screen {
         timerLabel.setFont(new Font("Arial", Font.BOLD, 16));
         timerLabel.setHorizontalAlignment(JLabel.CENTER);
         add(timerLabel, BorderLayout.NORTH);
+
+        returnToLobbyButton = new JButton("로비로 돌아가기");
+        returnToLobbyButton.setEnabled(false);
+        returnToLobbyButton.addActionListener(e -> {
+            try {
+                screenController.sendToServer(new Message(MessageType.CLIENT_EXIT_ROOM_EVENT, null));
+                screenController.showScreen(RoomListScreen.screenName);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                screenController.showToast("로비로 돌아가는 중 오류가 발생했습니다.");
+            }
+        });
+        add(returnToLobbyButton, BorderLayout.EAST);
 
     }
 
@@ -138,6 +154,7 @@ public class MVPScreen extends Screen {
                 timerLabel.setText("투표 종료");
                 voteTimer.stop();
                 disableAllVoteButtons();
+                returnToLobbyButton.setEnabled(true);
             }
         });
         voteTimer.start();
@@ -155,12 +172,14 @@ public class MVPScreen extends Screen {
             }
             resultText.append("</html>");
             resultLabel.setText(resultText.toString());
+            returnToLobbyButton.setEnabled(true);
         });
     }
 
     private static UserInfo findUserById(int userId) {
-        // 이 메서드는 userId에 해당하는 UserInfo를 찾아 반환해야 합니다.
-        // GameScreen의 userOrder 리스트나 다른 적절한 데이터 구조를 사용하여 구현해야 합니다.
-        return null; // 임시 반환값
+        for(UserInfo user: GameScreen.userOrder){
+            if(user.getId() == userId) return user;
+        }
+        return null;
     }
 }
