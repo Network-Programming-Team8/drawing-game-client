@@ -9,11 +9,13 @@ import message.Message;
 import message.MessageType;
 import modules.game.GameScreen;
 import modules.mvp.MVPScreen;
+import utils.UnixSeconds;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.temporal.Temporal;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -30,7 +32,7 @@ public class DrawingController {
     private int currentThickness = 2;
     private ScreenController screenController;
     public static int timeout;
-    private LocalDateTime startTime;
+    private UnixSeconds startTime;
     private boolean isDone = false;
 
     public DrawingController(ScreenController screenController) {
@@ -53,13 +55,13 @@ public class DrawingController {
 
     public void sendDrawEvent(DrawElementInfo element) {
         try {
-            LocalDateTime submittedTime = LocalDateTime.now();
+            UnixSeconds submittedTime = UnixSeconds.now();
             if(this.startTime.plusSeconds(timeout).isBefore(submittedTime)){
                 drawingPanel.setIsCurrentDrawer(false);
                 isDone = true;
                 return ;
             }
-            ClientDrawEvent event = new ClientDrawEvent(currentUserId, element, submittedTime);
+            ClientDrawEvent event = new ClientDrawEvent(currentUserId, element, submittedTime.toLong());
             screenController.sendToServer(new Message(MessageType.CLIENT_DRAW_EVENT, event));
         } catch (IOException e) {
             e.printStackTrace();
@@ -70,11 +72,14 @@ public class DrawingController {
         if(serverTurnChangeEvent.getNowTurn() == currentUserId) {
             drawingPanel.rePaint();
             this.currentDrawer = serverTurnChangeEvent.getNowTurn();
-            this.startTime = serverTurnChangeEvent.getStartTime();
+            this.startTime = UnixSeconds.from(serverTurnChangeEvent.getStartTime());
             drawingPanel.setCurrentDrawer(this.currentDrawer);
 
             // 남은 시간 계산
-            long remainingSeconds = java.time.Duration.between(LocalDateTime.now(), this.startTime.plusSeconds(timeout)).getSeconds();
+            UnixSeconds now = UnixSeconds.now();
+            // 시작 시간에 타임아웃 추가
+            UnixSeconds timeoutTime = startTime.plusSeconds(timeout);
+            long remainingSeconds = now.isBefore(timeoutTime) ? now.secondsUntil(timeoutTime) : 0;
             GameScreen.startTimeLabel(Math.max(0, (int)remainingSeconds));
         }
     }

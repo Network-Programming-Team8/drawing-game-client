@@ -204,7 +204,7 @@ public class ServerListener implements Runnable {
         ServerRequestVoteEvent event = (ServerRequestVoteEvent) message.getMsgDTO();
 
         SwingUtilities.invokeLater(() -> {
-            MVPScreen.startVoteTimer(event.getEndTime());
+            MVPScreen.startVoteTimer(UnixSeconds.from(event.getEndTime()));
         });
     }
 }

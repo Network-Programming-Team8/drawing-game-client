@@ -12,11 +12,13 @@ import message.MessageType;
 import modules.game.GameScreen;
 import modules.lobby.LobbyScreen;
 import modules.roomList.RoomListScreen;
+import utils.UnixSeconds;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.temporal.Temporal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -142,13 +144,14 @@ public class MVPScreen extends Screen {
         }
     }
 
-    public static void startVoteTimer(LocalDateTime endTime) {
+    public static void startVoteTimer(UnixSeconds endTime) {
         if (voteTimer != null) {
             voteTimer.stop();
         }
 
         voteTimer = new Timer(1000, e -> {
-            long remainingSeconds = java.time.Duration.between(LocalDateTime.now(), endTime).getSeconds();
+            UnixSeconds now = UnixSeconds.now();
+            long remainingSeconds = now.isBefore(endTime) ? now.secondsUntil(endTime) : 0;;
             if (remainingSeconds > 0) {
                 timerLabel.setText("투표 시간: " + remainingSeconds + "초");
             } else {

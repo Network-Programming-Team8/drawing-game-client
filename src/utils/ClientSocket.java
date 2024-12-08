@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.Socket;
 
 public class ClientSocket {
+//    private static final String ipAddress = "3.93.131.99";
     private static final String ipAddress = "localhost";
     private static final int port = 10001;
 
