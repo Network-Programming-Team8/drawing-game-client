@@ -142,9 +142,9 @@ public class LobbyScreen extends Screen {
             java.util.List<UserInfo> userList = roomInfo.getUserInfoList();
 
             for (int i = 0; i < userList.size(); i++) {
-                String path = String.format("../../resources/person%d.png",(i%3)+1);
+                String path = String.format("../../resources/person%d.png",(userList.get(i).getId()%3)+1);
                 if(userList.get(i).isReady()){
-                    path = String.format("../../resources/person%d_ready.png",(i%3)+1);
+                    path = String.format("../../resources/person%d_ready.png",(userList.get(i).getId()%3)+1);
                 }
 
                 JLabel userLabel = (JLabel) userPanel.getComponent(i);
