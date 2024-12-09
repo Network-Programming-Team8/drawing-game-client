@@ -14,6 +14,7 @@ import modules.roomList.RoomListScreen;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Arrays;
@@ -37,9 +38,16 @@ public class ServerListener implements Runnable {
             try {
                 Message message = (Message) in.readObject();
                 handleMessage(message);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (ClassNotFoundException e) {
+            } catch (EOFException e) {
+                screenController.showToast("The connection to the server has been lost");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                System.exit(0);
+                break;
+            } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         }
