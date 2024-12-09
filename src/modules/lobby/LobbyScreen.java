@@ -115,7 +115,12 @@ public class LobbyScreen extends Screen {
             for (int i = 0; i < userList.size(); i++) {
                 JLabel targetUserArea = (JLabel) userPanel.getComponent(i);
                 UserInfo user = userList.get(i);
-                targetUserArea.setText(String.format("<html>[ID]: %d<br>[Nickname]: %s</html>", user.getId(), user.getNickname()));
+                boolean isOwner = roomInfo.getOwnerId() == user.getId();
+                boolean isMe = screenController.getUserInfo().getId() == user.getId();
+                String meText = isMe ? "[me]" : "";
+                String ownerText = isOwner ? "[owner]" : "";
+                String breakText = isMe || isOwner ? "<br>" : "";
+                targetUserArea.setText(String.format("<html>%s%s%s[ID %d]%s</html>", meText, ownerText,breakText, user.getId(), user.getNickname()));
                 targetUserArea.setVisible(true);
             }
             userPanel.revalidate();
