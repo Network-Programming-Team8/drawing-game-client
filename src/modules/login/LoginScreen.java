@@ -58,7 +58,7 @@ public class LoginScreen extends Screen {
         mainPanel.add(Box.createRigidArea(new Dimension(0, 30))); // 간격 추가: KUhoot과 nickname 사이
 
         // 2. 닉네임 라벨
-        JLabel nicknameLabel = new JLabel("사용하실 닉네임을 입력해주세요");
+        JLabel nicknameLabel = new JLabel("Please enter the nickname");
         nicknameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         mainPanel.add(nicknameLabel);
 

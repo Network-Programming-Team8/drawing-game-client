@@ -4,7 +4,6 @@ import common.drawing.DrawingController;
 import common.screen.Screen;
 import dto.event.client.ClientExitRoomEvent;
 import dto.event.client.ClientVoteEvent;
-import dto.event.client.ClientVoteReadyEvent;
 import dto.info.UserInfo;
 import dto.info.VoteInfo;
 import message.Message;
@@ -17,8 +16,6 @@ import utils.UnixSeconds;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.temporal.Temporal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,16 +35,16 @@ public class MVPScreen extends Screen {
 
         makeUserPanel();
 
-        resultLabel = new JLabel("투표 결과를 기다리는 중...");
+        resultLabel = new JLabel("Waiting for the results of the vote...");
         resultLabel.setHorizontalAlignment(JLabel.CENTER);
         add(resultLabel, BorderLayout.SOUTH);
 
-        timerLabel = new JLabel("아직 참여자들이 그리기 과정을 보고있어요!");
+        timerLabel = new JLabel("The participants are still watching the drawing process!");
         timerLabel.setFont(new Font("Arial", Font.BOLD, 16));
         timerLabel.setHorizontalAlignment(JLabel.CENTER);
         add(timerLabel, BorderLayout.NORTH);
 
-        returnToLobbyButton = new JButton("로비로 돌아가기");
+        returnToLobbyButton = new JButton("Return to the Lobby");
         returnToLobbyButton.setEnabled(false);
         returnToLobbyButton.addActionListener(e -> {
             try {
@@ -57,7 +54,7 @@ public class MVPScreen extends Screen {
                 screenController.showScreen(RoomListScreen.screenName);
             } catch (IOException ex) {
                 ex.printStackTrace();
-                screenController.showToast("로비로 돌아가는 중 오류가 발생했습니다.");
+                screenController.showToast("An error occurred on the way back to the lobby.");
             }
         });
         add(returnToLobbyButton, BorderLayout.EAST);
@@ -66,7 +63,7 @@ public class MVPScreen extends Screen {
 
     private void makeUserPanel() {
         userPanel = new JPanel(new GridLayout(0, 3, 10, 10));
-        userPanel.setBorder(BorderFactory.createTitledBorder("MVP 투표"));
+        userPanel.setBorder(BorderFactory.createTitledBorder("MVP Vote"));
         userPanel.setBackground(Color.decode("#f1f8e9"));
 
         JScrollPane scrollPane = new JScrollPane(userPanel);
@@ -88,23 +85,23 @@ public class MVPScreen extends Screen {
                 userLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
                 userVotePanel.add(userLabel);
 
-                JLabel voteLabel = new JLabel("투표 수: 0");
+                JLabel voteLabel = new JLabel("the number of votes : 0");
                 voteLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
                 userVotePanel.add(voteLabel);
                 voteLabels.put(user.getId(), voteLabel);
 
-                JButton voteButton = new JButton("투표");
+                JButton voteButton = new JButton("Vote");
                 voteButton.setAlignmentX(Component.CENTER_ALIGNMENT);
                 voteButton.addActionListener(e -> {
                     if(voteTimer == null || !voteTimer.isRunning()){
-                        screenController.showToast("아직 투표할 수 없어요!");
+                        screenController.showToast("Can't vote yet!");
                     } else {
                         try {
                             screenController.sendToServer(new Message(MessageType.CLIENT_VOTE_EVENT, new ClientVoteEvent(user.getId())));
-                            screenController.showToast("투표가 완료되었습니다.");
+                            screenController.showToast("Voting has been completed.");
                         } catch (IOException ex) {
                             ex.printStackTrace();
-                            screenController.showToast("투표 중 오류가 발생했습니다.");
+                            screenController.showToast("An error occurred during voting.");
                         }
                     }
                 });
@@ -124,7 +121,7 @@ public class MVPScreen extends Screen {
                 int voteCount = entry.getValue();
                 JLabel voteLabel = voteLabels.get(userId);
                 if (voteLabel != null) {
-                    voteLabel.setText("투표 수: " + voteCount);
+                    voteLabel.setText("the number of votes : " + voteCount);
                 }
             }
         });
@@ -153,9 +150,9 @@ public class MVPScreen extends Screen {
             UnixSeconds now = UnixSeconds.now();
             long remainingSeconds = now.isBefore(endTime) ? now.secondsUntil(endTime) : 0;;
             if (remainingSeconds > 0) {
-                timerLabel.setText("투표 시간: " + remainingSeconds + "초");
+                timerLabel.setText("Voting time: " + remainingSeconds + " seconds");
             } else {
-                timerLabel.setText("투표 종료");
+                timerLabel.setText("End of the vote");
                 voteTimer.stop();
                 disableAllVoteButtons();
                 returnToLobbyButton.setEnabled(true);
@@ -166,12 +163,12 @@ public class MVPScreen extends Screen {
 
     public static void showVoteResult(VoteInfo voteInfo) {
         SwingUtilities.invokeLater(() -> {
-            StringBuilder resultText = new StringBuilder("<html>투표 결과:<br>");
+            StringBuilder resultText = new StringBuilder("<html>Result of Vote:<br>");
             for (Integer userId : voteInfo.getVoteResults().keySet()) {
                 int voteCount = voteInfo.getVoteResults().get(userId);
                 UserInfo user = findUserById(userId);
                 if (user != null) {
-                    resultText.append(String.format("%s: %d표<br>", user.getNickname(), voteCount));
+                    resultText.append(String.format("%s: %d <br>", user.getNickname(), voteCount));
                 }
             }
             resultText.append("</html>");
@@ -202,8 +199,8 @@ public class MVPScreen extends Screen {
         // Swing 컴포넌트 초기화
         SwingUtilities.invokeLater(() -> {
             userPanel.removeAll();
-            resultLabel.setText("투표 결과를 기다리는 중...");
-            timerLabel.setText("아직 참여자들이 그리기 과정을 보고있어요!");
+            resultLabel.setText("Waiting for the results of the vote...");
+            timerLabel.setText("The participants are still watching the drawing process!");
             returnToLobbyButton.setEnabled(false);
             userPanel.revalidate();
             userPanel.repaint();

@@ -30,7 +30,7 @@ public class RoomListScreen  extends Screen {
         createPanel.setLayout(new BoxLayout(createPanel, BoxLayout.Y_AXIS));
 
         // 방 생성 라벨
-        JLabel createTitle = new JLabel("방 생성");
+        JLabel createTitle = new JLabel("Create Room");
         createTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         createTitle.setFont(new Font("Arial", Font.BOLD, 24));
         createPanel.add(Box.createRigidArea(new Dimension(0, 20))); // 간격 추가
@@ -38,20 +38,20 @@ public class RoomListScreen  extends Screen {
 
         // 그리기 시간 제한 입력
         JTextField timeLimitField = new JTextField(15);
-        timeLimitField.setBorder(BorderFactory.createTitledBorder("그리기 시간 제한 (초)"));
+        timeLimitField.setBorder(BorderFactory.createTitledBorder("Time limit (second)"));
         timeLimitField.setMaximumSize(new Dimension(200, 40));
         createPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         createPanel.add(timeLimitField);
 
         // 참여자 수 제한 입력
         JTextField participantLimitField = new JTextField(15);
-        participantLimitField.setBorder(BorderFactory.createTitledBorder("참여자 수"));
+        participantLimitField.setBorder(BorderFactory.createTitledBorder("Participants limit"));
         participantLimitField.setMaximumSize(new Dimension(200, 40));
         createPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         createPanel.add(participantLimitField);
 
         // 방 생성 버튼
-        JButton createButton = new JButton("방 생성");
+        JButton createButton = new JButton("Create Room");
         createButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         createButton.addActionListener(e -> {
             ClientCreateRoomEvent clientCreateRoomEvent = getCreateRoomDTOFromTextField(createPanel, timeLimitField, participantLimitField);
@@ -71,7 +71,7 @@ public class RoomListScreen  extends Screen {
         joinPanel.setLayout(new BoxLayout(joinPanel, BoxLayout.Y_AXIS));
 
         // 방 참가 라벨
-        JLabel joinTitle = new JLabel("기존 방 참가");
+        JLabel joinTitle = new JLabel("Participate room");
         joinTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         joinTitle.setFont(new Font("Arial", Font.BOLD, 24));
         joinPanel.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -110,7 +110,7 @@ public class RoomListScreen  extends Screen {
         String roomId = roomIdField.getText();
 
         if (roomId.isEmpty() || roomId.isEmpty()) {
-            JOptionPane.showMessageDialog(createPanel, "모든 필드를 채워주세요.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(createPanel, "Please fill in all the fields.", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
 
@@ -118,7 +118,7 @@ public class RoomListScreen  extends Screen {
         try {
             roomIdInt = Integer.parseInt(roomId);
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(createPanel, "시간 제한과 참여자 수는 숫자로 입력해야 합니다.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(createPanel, "The time limit and the number of participants must be entered as numbers.", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
 
@@ -130,7 +130,7 @@ public class RoomListScreen  extends Screen {
         String participantLimitText = participantLimitField.getText();
 
         if (timeLimitText.isEmpty() || participantLimitText.isEmpty()) {
-            JOptionPane.showMessageDialog(createPanel, "모든 필드를 채워주세요.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(createPanel, "Please fill in all the fields.", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
 
@@ -140,12 +140,12 @@ public class RoomListScreen  extends Screen {
             timeLimit = Integer.parseInt(timeLimitText);
             participantLimit = Integer.parseInt(participantLimitText);
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(createPanel, "시간 제한과 참여자 수는 숫자로 입력해야 합니다.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(createPanel, "The time limit and the number of participants must be entered as numbers.", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
 
         if(participantLimit > 9) {
-            JOptionPane.showMessageDialog(createPanel, "참여자 수는 9명 제한입니다.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(createPanel, "The number of participants is limited to 9", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
 

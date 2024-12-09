@@ -32,10 +32,10 @@ public class LobbyScreen extends Screen {
     private void makeRoomInfoPanel() {
         roomInfoPanel = new JPanel();
         roomInfoPanel.setLayout(new BoxLayout(roomInfoPanel, BoxLayout.Y_AXIS));
-        roomInfoPanel.setBorder(BorderFactory.createTitledBorder("방 설정 정보"));
+        roomInfoPanel.setBorder(BorderFactory.createTitledBorder("Settings"));
         roomInfoPanel.setBackground(Color.decode("#fff9c4"));
 
-        changeRoomSettingButton = new JButton("방 정보 변경");
+        changeRoomSettingButton = new JButton("Change Setting");
         changeRoomSettingButton.addActionListener(e -> showChangeRoomSettingDialog());
         roomInfoPanel.add(changeRoomSettingButton);
 
@@ -43,18 +43,18 @@ public class LobbyScreen extends Screen {
     }
 
     private void showChangeRoomSettingDialog() {
-        JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "방 정보 변경", true);
+        JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Change Setting", true);
         dialog.setLayout(new GridLayout(3, 2));
 
         JTextField drawTimeLimitField = new JTextField(String.valueOf(roomInfo.getDrawTimeLimit()));
         JTextField participantLimitField = new JTextField(String.valueOf(roomInfo.getParticipantLimit()));
 
-        dialog.add(new JLabel("그리기 시간 제한:"));
+        dialog.add(new JLabel("Time limit:"));
         dialog.add(drawTimeLimitField);
-        dialog.add(new JLabel("참여자 수 제한:"));
+        dialog.add(new JLabel("Participants limit:"));
         dialog.add(participantLimitField);
 
-        JButton confirmButton = new JButton("확인");
+        JButton confirmButton = new JButton("Check");
         confirmButton.addActionListener(e -> {
             try {
                 int drawTimeLimit = Integer.parseInt(drawTimeLimitField.getText());
@@ -63,13 +63,13 @@ public class LobbyScreen extends Screen {
                 screenController.sendToServer(new Message(CLIENT_CHANGE_ROOM_SETTING_EVENT, event));
                 dialog.dispose();
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(dialog, "올바른 숫자를 입력해주세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(dialog, "Please enter a valid number.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
             } catch (IOException ex) {
-                JOptionPane.showMessageDialog(dialog, "서버 통신 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(dialog, "A server communication error has occurred.", "error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        JButton cancelButton = new JButton("취소");
+        JButton cancelButton = new JButton("cancel");
         cancelButton.addActionListener(e -> dialog.dispose());
 
         dialog.add(confirmButton);
@@ -86,9 +86,9 @@ public class LobbyScreen extends Screen {
             if (roomInfo.getId() != -1) {
                 //방 설정 정보 update
                 roomInfoPanel.removeAll();
-                JLabel roomIdLabel = new JLabel(String.format("방 ID: %d", roomInfo.getId()));
-                JLabel setting1 = new JLabel(String.format("그리기 제한 시간: %d초", roomInfo.getDrawTimeLimit()));
-                JLabel setting2 = new JLabel(String.format("참여 참가자 수: %d명", roomInfo.getParticipantLimit()));
+                JLabel roomIdLabel = new JLabel(String.format("Room ID: %d", roomInfo.getId()));
+                JLabel setting1 = new JLabel(String.format("Time limit: %d seconds", roomInfo.getDrawTimeLimit()));
+                JLabel setting2 = new JLabel(String.format("Participants limit: %d", roomInfo.getParticipantLimit()));
                 roomInfoPanel.add(roomIdLabel);
                 roomInfoPanel.add(setting1);
                 roomInfoPanel.add(setting2);
@@ -129,9 +129,9 @@ public class LobbyScreen extends Screen {
         SwingUtilities.invokeLater(() -> {
             JLabel readyStatus = (JLabel) readyPanel.getComponent(1);
             if (isReady) {
-                readyStatus.setText("준비 완료");
+                readyStatus.setText("Ready");
             } else {
-                readyStatus.setText("준비 해주세요");
+                readyStatus.setText("Be ready");
             }
             updateUserReadyStatus();
         });
@@ -171,7 +171,7 @@ public class LobbyScreen extends Screen {
 
         // 설정 및 Ready 버튼 영역
         JPanel settingsPanel = new JPanel(new GridLayout(1, 2)); // 좌우로 나뉨
-        settingsPanel.setBorder(BorderFactory.createTitledBorder("설정 및 준비"));
+        settingsPanel.setBorder(BorderFactory.createTitledBorder("Setting up and preparing"));
         // 방 설정 정보
         makeRoomInfoPanel();
         // Ready 버튼
@@ -193,7 +193,7 @@ public class LobbyScreen extends Screen {
 
     private void makeUserFieldPanel(){
         userPanel = new JPanel(new GridLayout(0, 3, 10, 10)); // 3열 그리드
-        userPanel.setBorder(BorderFactory.createTitledBorder("사용자 목록"));
+        userPanel.setBorder(BorderFactory.createTitledBorder("List of users"));
         userPanel.setBackground(Color.decode("#f1f8e9"));
 
         for (int i = 0; i < 9; i++) {
@@ -215,7 +215,7 @@ public class LobbyScreen extends Screen {
     private JPanel makeChatPanel(){
         // 채팅 영역
         JPanel chatPanel = new JPanel(new BorderLayout());
-        chatPanel.setBorder(BorderFactory.createTitledBorder("채팅 창"));
+        chatPanel.setBorder(BorderFactory.createTitledBorder("Chatting Panel"));
         chatPanel.setBackground(Color.decode("#e3f2fd"));
 
         // 채팅 기록 모델 및 JList 설정
@@ -244,10 +244,10 @@ public class LobbyScreen extends Screen {
                     screenController.sendToServer(new Message(CLIENT_ROOM_CHAT_MESSAGE, dto));
 
                     // 클라이언트에 채팅 추가 (서버 응답 처리 이전 가정)
-                    addChatMessage(chatModel, "나: " + message);
+                    addChatMessage(chatModel, "Me: " + message);
                     chatInputField.setText(""); // 입력 필드 초기화
                 } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(chatPanel, "메시지 전송 실패!", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(chatPanel, "Failed to send message!", "Error", JOptionPane.ERROR_MESSAGE);
                     ex.printStackTrace();
                 }
             }
@@ -284,7 +284,7 @@ public class LobbyScreen extends Screen {
         readyPanel.setLayout(new BoxLayout(readyPanel, BoxLayout.Y_AXIS));
         readyPanel.setBackground(Color.decode("#ffcdd2"));
 
-        JLabel readyStatus = new JLabel("준비 해주세요");
+        JLabel readyStatus = new JLabel("Be ready");
         readyStatus.setOpaque(true);
 
         JButton readyButton = new JButton("Ready");
@@ -329,7 +329,7 @@ public class LobbyScreen extends Screen {
         inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
         inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JLabel instructionLabel = new JLabel("그림 주제를 제안해주세요");
+        JLabel instructionLabel = new JLabel("Please suggest topic of Drawing");
         instructionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         instructionLabel.setFont(new Font("Arial", Font.BOLD, 14));
         inputPanel.add(instructionLabel);

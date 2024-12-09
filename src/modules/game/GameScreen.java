@@ -39,7 +39,7 @@ public class GameScreen extends Screen {
 
     public static void updateStatusLabelGameStart() {
         SwingUtilities.invokeLater(() -> {
-            statusLabel.setText("게임 시작!");
+            statusLabel.setText("Game Start!");
         });
     }
 
@@ -81,14 +81,14 @@ public class GameScreen extends Screen {
         SwingUtilities.invokeLater(() -> {
             JPanel topicPanel = (JPanel)infoPanel.getComponent(0);
             JLabel topicLabel = (JLabel)topicPanel.getComponent(0);
-            String topic=String.format("그리기 주제 : %s", selectedTopic);
+            String topic=String.format("Drawing Topic : \n%s", selectedTopic);
             if(guesserInfo.getId() == DrawingController.getCurrentUserId()){
-                topic = String.format("당신은 맞히는 사람입니다.");
+                topic = String.format("You are Guesser!");
             }
             topicLabel.setText(String.format(topic));
             JPanel userPanel = (JPanel)infoPanel.getComponent(2);
             JLabel userLabel = (JLabel)userPanel.getComponent(0);
-            userLabel.setText(String.format("맞히는 사람 : %s", guesserInfo.getNickname()));
+            userLabel.setText(String.format("Guesser : %s", guesserInfo.getNickname()));
 
             infoPanel.revalidate();
             infoPanel.repaint();
@@ -122,7 +122,7 @@ public class GameScreen extends Screen {
 
     private void makeUserPanel(){
         userListPanel = new JPanel(new GridLayout(9,1, 10,10 ));
-        userListPanel.setBorder(BorderFactory.createTitledBorder("현재 유저들"));
+        userListPanel.setBorder(BorderFactory.createTitledBorder("Current Users"));
         userListPanel.setPreferredSize(new Dimension(150, 0));
         userListPanel.setBackground(Color.decode("#e8f5e9"));
 
@@ -140,7 +140,7 @@ public class GameScreen extends Screen {
     private void makeInfoPanel(){
         infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
-        infoPanel.setBorder(BorderFactory.createTitledBorder("정보"));
+        infoPanel.setBorder(BorderFactory.createTitledBorder("Information"));
         infoPanel.setPreferredSize(new Dimension(200, 0));
         infoPanel.setBackground(Color.decode("#fbe9e7"));
 
@@ -150,7 +150,7 @@ public class GameScreen extends Screen {
         topicPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // 패딩 설정
         topicPanel.setMaximumSize(new Dimension(200, 80)); // 고정 크기 설정
         topicPanel.setPreferredSize(new Dimension(200, 80)); // 원하는 크기 설정
-        JLabel topicLabel = new JLabel("주제를 선정하는 중입니다.", SwingConstants.CENTER);
+        JLabel topicLabel = new JLabel("Other User typing\n Topic", SwingConstants.CENTER);
         topicLabel.setFont(new Font("Arial", Font.BOLD, 16));
         topicPanel.add(topicLabel, BorderLayout.CENTER);
 
@@ -160,7 +160,7 @@ public class GameScreen extends Screen {
         drawerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // 패딩 설정
         drawerPanel.setMaximumSize(new Dimension(200, 80)); // 고정 크기 설정
         drawerPanel.setPreferredSize(new Dimension(200, 80)); // 원하는 크기 설정
-        JLabel drawerLabel = new JLabel("맞히는 사람을 정하는 중입니다.", SwingConstants.CENTER);
+        JLabel drawerLabel = new JLabel("Selecting Guesser...", SwingConstants.CENTER);
         drawerLabel.setFont(new Font("Arial", Font.BOLD, 16));
         drawerPanel.add(drawerLabel, BorderLayout.CENTER);
 
@@ -180,7 +180,7 @@ public class GameScreen extends Screen {
         drawingArea.setBackground(Color.WHITE);
         drawingArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
-        statusLabel = new JLabel("아직 참여자가 주제 발의 중입니다", SwingConstants.CENTER);
+        statusLabel = new JLabel("participant is still proposing the topic", SwingConstants.CENTER);
         statusLabel.setForeground(Color.RED);
         statusLabel.setFont(new Font("Arial", Font.BOLD, 20));
         statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -254,7 +254,7 @@ public class GameScreen extends Screen {
         inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
         inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JLabel instructionLabel = new JLabel("예측한 그림 주제를 입력해주세요!");
+        JLabel instructionLabel = new JLabel("Please enter predicted topic!");
         instructionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         instructionLabel.setFont(new Font("Arial", Font.BOLD, 14));
         inputPanel.add(instructionLabel);
@@ -270,7 +270,7 @@ public class GameScreen extends Screen {
 
         // 버튼
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton confirmButton = new JButton("제출");
+        JButton confirmButton = new JButton("Submit");
 
         confirmButton.addActionListener(e -> {
             String inputValue = inputField.getText().trim();
@@ -310,17 +310,17 @@ public class GameScreen extends Screen {
         inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
         inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JLabel guesserAnswer = new JLabel(String.format("참가자가 예측한 게임 주제 : %s", guesser_answer));
+        JLabel guesserAnswer = new JLabel(String.format("Predicted by Guesser : %s", guesser_answer));
         guesserAnswer.setAlignmentX(Component.CENTER_ALIGNMENT);
         guesserAnswer.setFont(new Font("Arial", Font.BOLD, 14));
         inputPanel.add(guesserAnswer);
 
-        JLabel selectedTopic = new JLabel(String.format("실제 그리기 주제 : %s", topic));
+        JLabel selectedTopic = new JLabel(String.format("Actual drawing topic : %s", topic));
         selectedTopic.setAlignmentX(Component.CENTER_ALIGNMENT);
         selectedTopic.setFont(new Font("Arial", Font.BOLD, 14));
         inputPanel.add(selectedTopic);
 
-        String guess_result = (topic.equals(guesser_answer)) ? "맞혔습니다!" : "틀렸습니다..ㅜㅜ";
+        String guess_result = (topic.equals(guesser_answer)) ? "That's right!" : "Wrong answer..";
         Color resultColor = (topic.equals(guesser_answer)) ? Color.BLUE : Color.RED;
 
         JLabel guess_resultLabel = new JLabel(guess_result);
@@ -331,7 +331,7 @@ public class GameScreen extends Screen {
 
         // 버튼
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton confirmButton = new JButton("그리기 과정 돌아보기");
+        JButton confirmButton = new JButton("Looking back on the drawing process");
 
         confirmButton.addActionListener(e -> {
             dialog.dispose();
@@ -368,7 +368,7 @@ public class GameScreen extends Screen {
             userListPanel.removeAll();
             infoPanel.removeAll();
             drawingPanel.removeAll();
-            statusLabel.setText("아직 참여자가 주제 발의 중입니다");
+            statusLabel.setText("participant is still proposing the topic");
             userListPanel.revalidate();
             userListPanel.repaint();
             infoPanel.revalidate();
